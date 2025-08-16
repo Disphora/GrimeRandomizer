@@ -64,6 +64,14 @@ namespace GrimeRandomizer
             MethodInfo patch4 = AccessTools.Method(typeof(Patches), "SetRandoText");
             harmony.Patch(original4, new HarmonyMethod(patch4));
 
+            MethodInfo original6 = AccessTools.Method(typeof(PlayerData_Talents), "SetTalentRank");
+            MethodInfo patch6 = AccessTools.Method(typeof(Patches), "GiveRandomFromRank");
+            harmony.Patch(original6, new HarmonyMethod(patch6));
+
+            MethodInfo original7 = AccessTools.Method(typeof(PlayerData_Talents), "IsTalentAquired");
+            MethodInfo patch7 = AccessTools.Method(typeof(Patches), "TalentAquiredHijack");
+            harmony.Patch(original7, new HarmonyMethod(patch7));
+
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} has loaded!");
 
 
@@ -78,10 +86,17 @@ namespace GrimeRandomizer
             public static Vector3 lastPos = Vector3.zero;
             static AccessTools.FieldRef<PickableItemHandler, bool> didPick = AccessTools.FieldRefAccess<PickableItemHandler, bool>("didPick");
             public static bool customFlagSet = false;
+            public static bool customTalentSet = false;
+            public static bool customGiveItem = false;
             public static Vector3 itemCollectedTemp = Vector3.zero;
             static Dictionary<ItemCoord, ItemDefinition> itemCoordsPair = new Dictionary<ItemCoord, ItemDefinition>();
             public static int persistentAssignNum = 0;
             public static bool itemsRandomized = false;
+            public static bool kilyahStoneCollected;
+            public static bool StrandCollected;
+
+            public static bool isPullAquired = false;
+            public static bool isSelfPullAquired = false;
 
             public static bool RandoPatch(GameHandler __instance)
             {
@@ -280,6 +295,11 @@ namespace GrimeRandomizer
 
             public static bool GiveRandom(ref Data_Item item, ref int amount)
             {
+                if (customGiveItem)
+                {
+                    return true;
+                }
+
                 AccessTools.FieldRef<GameHandler, Data_Talent[]> unlockSkillsBase = AccessTools.FieldRefAccess<GameHandler, Data_Talent[]>("unlockSkillsBase");
                 AccessTools.FieldRef<GameHandler, Data_Talent[]> unlockSkillsDLC = AccessTools.FieldRefAccess<GameHandler, Data_Talent[]>("unlockSkillsDLC");
                 int assignedItemsQuantity = 0;
@@ -300,6 +320,7 @@ namespace GrimeRandomizer
                                         break;
                                     case "pull":
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
+                                        isPullAquired = true;
                                         break;
                                     case "itemPull":
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
@@ -325,12 +346,31 @@ namespace GrimeRandomizer
                                         amount = keyValuePair.Value.Quantity;
                                         kvpToRemove = keyValuePair.Key;
 
-                                        if (keyValuePair.Value.Guid == "e497b557-1320-4df5-a844-3985e80b6d25")
+                                        if (keyValuePair.Value.Guid == "36df0fa1-a266-4973-85b8-702ac10c2f6f") //KiliahStone
                                         {
-                                            customFlagSet = true;
-                                            SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
+                                            kilyahStoneCollected = true;
+                                            if (StrandCollected)
+                                            {
+                                                customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
+                                            }
+                                            else
+                                            {
+                                                customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 1);
+                                            }
                                         }
-                                        break;
+
+                                        if (keyValuePair.Value.Guid == "e497b557-1320-4df5-a844-3985e80b6d25") //StrandOfTheChild
+                                        {
+                                            StrandCollected = true;
+                                            if (kilyahStoneCollected)
+                                            {
+                                                customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
+                                            }
+                                        }
+                                    break;
                                 }
                             }
                         }
@@ -357,6 +397,7 @@ namespace GrimeRandomizer
                                     break;
                                 case "pull":
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
+                                    isPullAquired = true;
                                     break;
                                 case "itemPull":
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
@@ -401,6 +442,96 @@ namespace GrimeRandomizer
                     {
                         itemCollectedTemp = Vector3.zero;
                     }
+                }
+
+                return true;
+            }
+
+            public static bool GiveRandomFromRank(ref Data_Talent talent, int rank)
+            {
+                AccessTools.FieldRef<GameHandler, Data_Talent[]> unlockSkillsBase = AccessTools.FieldRefAccess<GameHandler, Data_Talent[]>("unlockSkillsBase");
+                AccessTools.FieldRef<GameHandler, Data_Talent[]> unlockSkillsDLC = AccessTools.FieldRefAccess<GameHandler, Data_Talent[]>("unlockSkillsDLC");
+                PlayerData_Inventory playerData_Inventory = PlayerData_Inventory.instance;
+                ItemCoord kvpToRemove = new ItemCoord(Vector3.zero);
+
+                string[] talentNameSplit = talent.name.Split(' ');
+                string talrep1 = talentNameSplit[talentNameSplit.Length - 1].Replace("(", string.Empty);
+                string talrep2 = talrep1.Replace(")", string.Empty);
+
+                bool isRandomizableSkill = false;
+                if (talrep2 == "Pull")
+                {
+                    isRandomizableSkill = true;
+                }
+
+                foreach (KeyValuePair<ItemCoord, ItemDefinition> keyValuePair in itemCoordsPair)
+                {
+                    if (talrep2 == keyValuePair.Key.ItemName)
+                    {
+                        switch (keyValuePair.Value.Guid)
+                        {
+                            case "walk":
+                                //Give Walk
+                                break;
+                            case "pull":
+                                PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
+                                isPullAquired = true;
+                                break;
+                            case "itemPull":
+                                PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
+                                break;
+                            case "airDash":
+                                PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
+                                break;
+                            case "selfPull":
+                                PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
+                                break;
+                            case "doubleJump":
+                                PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
+                                break;
+                            case "hover":
+                                PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                break;
+                            case "sprint":
+                                PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                break;
+                            default:
+                                Log.LogInfo("Giving randomized item " + Hashtable_Items.getHashtable.GetItemByID(keyValuePair.Value.Guid));
+                                customGiveItem = true;
+                                playerData_Inventory.GiveItem(Hashtable_Items.getHashtable.GetItemByID(keyValuePair.Value.Guid), keyValuePair.Value.Quantity);
+                                customGiveItem = false;
+                                kvpToRemove = keyValuePair.Key;
+
+                                if (keyValuePair.Value.Guid == "e497b557-1320-4df5-a844-3985e80b6d25")
+                                {
+                                    customFlagSet = true;
+                                    SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
+                                }
+                            break;
+                        }
+                    }
+                }
+                itemCoordsPair.Remove(kvpToRemove);
+
+                if (!customTalentSet && isRandomizableSkill)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            public static bool TalentAquiredHijack(Data_Talent talent)
+            {
+                string[] talentNameSplit = talent.name.Split(' ');
+                string talrep1 = talentNameSplit[talentNameSplit.Length - 1].Replace("(", string.Empty);
+                string talrep2 = talrep1.Replace(")", string.Empty);
+
+                if (talrep2 == "Pull" && !isPullAquired)
+                {
+                    return false;
                 }
 
                 return true;

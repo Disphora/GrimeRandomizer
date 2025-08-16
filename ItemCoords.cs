@@ -86,12 +86,13 @@ namespace GrimeRandomizer
             new ItemCoord(new Vector3(667.08f, 207.33f, 0.18f), "ArdentSand"),
             new ItemCoord(new Vector3(677.00f, 202.36f, 0.18f), "MotleyPearl"),
             new ItemCoord(new Vector3(680.00f, 197.32f, 0.18f), "MotleyPearl"),
-            new ItemCoord(new Vector3(69f, 69f, 69f), "ImpostorArmorFollows"),
             new ItemCoord(new Vector3(778.97f, 190.27f, 0.00f), "FriendlyImpostorArmor", itemPull, false, 3),
             new ItemCoord(new Vector3(767.18f, 195.47f, 0.00f), "Nail"),
             new ItemCoord(new Vector3(746.06f, 203.97f, 0.00f), "UnformedBody", airDash && selfPull && doubleJump),
             new ItemCoord(new Vector3(746.31f, 237.35f, 0.18f), "LivingFlesh", airDash && selfPull && doubleJump),
-            new ItemCoord(new Vector3(721.54f, 254.72f, 0.18f), "Bownails", airDash && selfPull && doubleJump)
+            new ItemCoord(new Vector3(721.54f, 254.72f, 0.18f), "Bownails", airDash && selfPull && doubleJump),
+
+            new ItemCoord(new Vector3(69f, 69f, 69f), "Pull")
         };
     }
 }
