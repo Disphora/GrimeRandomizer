@@ -152,6 +152,7 @@ namespace GrimeRandomizer
                 }
 
                 int itemsToRandomize = ItemCoords.itemCoordList.Count;
+                int numItemsRand = 0;
                 for (int j = 0, noAssignablesFailsafe = 0; j <= itemsToRandomize && noAssignablesFailsafe < 2000;)
                 {
                     if (listOrder == weaponItemToIgnore)
@@ -164,7 +165,7 @@ namespace GrimeRandomizer
                         int persistentItemsDropped = ItemCoords.itemCoordList[randomCoord].ItemsDropped;
                         for (int i = 1; i <= persistentItemsDropped; i++)
                         {
-                            Log.LogInfo("Random Coord Num: " + randomCoord + " Item based on coord: " + ItemCoords.itemCoordList[randomCoord].ItemName);
+                            //Log.LogInfo("Random Coord Num: " + randomCoord + " Item based on coord: " + ItemCoords.itemCoordList[randomCoord].ItemName);
                             //Assign ItemCoords.itemCoordList[randomCoord].ItemsDropped items to this Item Coord
                             ItemPool.itemPool.TryGetValue(pool1[listOrder], out ItemPool.ItemDefinition itemDef);
 
@@ -230,12 +231,14 @@ namespace GrimeRandomizer
                             listOrder++;
                         }
                         j++;
+                        numItemsRand = j;
                         noAssignablesFailsafe = 0;
                     }
                     noAssignablesFailsafe++;
                 }
 
                 itemsRandomized = true;
+                Log.LogInfo("Randomized " + numItemsRand + " items out of " +itemsToRandomize);
             }
 
             public static bool GetCoord(PickableItemHandler __instance)
@@ -264,7 +267,7 @@ namespace GrimeRandomizer
 
             public static bool GetBloodmetalCoord(InteractableMine __instance)
             {
-                GrimeRandomizer.Log.LogInfo("transform.position " + __instance.transform.position);
+                GrimeRandomizer.Log.LogInfo("Bloodmetal transform.position " + __instance.transform.position);
 
                 itemCollectedTemp = __instance.transform.position;
                 return true;
@@ -385,7 +388,7 @@ namespace GrimeRandomizer
                 {
                     foreach (KeyValuePair<ItemCoord, ItemDefinition> keyValuePair in itemCoordsPair)
                     {
-                        if (itemCollectedTemp.x > keyValuePair.Key.Coord.x - 0.3 && itemCollectedTemp.x < keyValuePair.Key.Coord.x + 0.3)
+                        if (itemCollectedTemp.x > keyValuePair.Key.Coord.x - 0.3 && itemCollectedTemp.x < keyValuePair.Key.Coord.x + 0.3 && itemCollectedTemp.y > keyValuePair.Key.Coord.y - 0.3 && itemCollectedTemp.y < keyValuePair.Key.Coord.y + 0.3)
                         {
                             Log.LogInfo("Matching: " + keyValuePair.Key.Coord);
                             assignedItemsQuantity++;

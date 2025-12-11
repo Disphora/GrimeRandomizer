@@ -856,7 +856,15 @@ namespace GrimeRandomizer
                 new ItemDefinition(BreathdewDroplet, 1),
                 new ItemDefinition(BreathdewFragment),
                 new ItemDefinition(CrimsonIchor),
-                new ItemDefinition(LivingFlesh, 5)
+                new ItemDefinition(LivingFlesh, 5),
+
+                new ItemDefinition("pull"),
+                new ItemDefinition("itemPull"),
+                new ItemDefinition("airDash"),
+                new ItemDefinition("selfPull"),
+                new ItemDefinition("doubleJump"),
+                new ItemDefinition("hover"),
+                new ItemDefinition("sprint")
             };
 
             foreach (var item in itemsToAdd)
