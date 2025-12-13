@@ -20,6 +20,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using static GrimeRandomizer.ItemPool;
+using RandomizerCore.Logic;
 
 namespace GrimeRandomizer
 {
@@ -78,7 +79,9 @@ namespace GrimeRandomizer
         public class Patches
         {
             public static List<int> pool1 = new List<int>();
+            public static List<int> progressionPool = new List<int>();
             public static int listOrder = 0;
+            public static int progressionListOrder = 0;
             public static bool pickedItem = false;
             public static bool pickedItem2 = false;
             public static Vector3 lastPos = Vector3.zero;
@@ -101,6 +104,12 @@ namespace GrimeRandomizer
                 PlayerData_Inventory playerData_Inventory = PlayerData_Inventory.instance;
                 ItemPool.AddItems();
 
+                for (int i = 0; i < 9; i++)
+                {
+                    progressionPool.Add(i);
+                }
+                progressionPool.Shuffle();
+
                 for (int i = 0; i < ItemPool.itemPool.Count; i++)
                 {
                     pool1.Add(i);
@@ -109,6 +118,7 @@ namespace GrimeRandomizer
                 pool1.Shuffle();
                 if (!itemsRandomized)
                 {
+                    ItemCoords.RefreshICList();
                     RandomlyAssignItems();
                 }
 
@@ -149,11 +159,88 @@ namespace GrimeRandomizer
                     Log.LogInfo("Weapon logic failed: Failed to randomize starting weapon.");
                 }
 
+                //Randomly assign progression items
+
+                int progressionItemsLength = 9;
+                for (int l = 0; l < progressionItemsLength; l++)
+                {
+                    bool assignedProg = false;
+                    int randomProgressionItem = progressionPool[progressionListOrder];
+
+                    while (!assignedProg)
+                    {
+                        int randomProgCoord = UnityEngine.Random.Range(0, ItemCoords.itemCoordList.Count);
+                        if (ItemCoords.itemCoordList[randomProgCoord].Assignable)
+                        {
+                            ItemPool.itemPool.TryGetValue(randomProgressionItem, out ItemPool.ItemDefinition itemDefProg);
+                            itemCoordsPair.Add(ItemCoords.itemCoordList[randomProgCoord], itemDefProg);
+
+                            switch (itemDefProg.Guid)
+                            {
+                                case "36df0fa1-a266-4973-85b8-702ac10c2f6f":
+                                    ItemCoords.kilyahStone = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "e497b557-1320-4df5-a844-3985e80b6d25":
+                                    ItemCoords.strandOfTheChild = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "walk":
+                                    ItemCoords.walk = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "pull":
+                                    ItemCoords.pull = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "itemPull":
+                                    ItemCoords.itemPull = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "airDash":
+                                    ItemCoords.airDash = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "selfPull":
+                                    ItemCoords.selfPull = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "doubleJump":
+                                    ItemCoords.doubleJump = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "hover":
+                                    ItemCoords.hover = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                case "sprint":
+                                    ItemCoords.sprint = true;
+                                    ItemCoords.RefreshICList();
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            if (ItemCoords.itemCoordList[randomProgCoord].ItemsDropped > 1)
+                            {
+                                ItemCoords.itemCoordList[randomProgCoord].ItemsDropped--;
+                            }
+
+                            ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[randomProgCoord]);
+                            Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomProgCoord].ItemName + " to " + itemDefProg.Guid);
+
+                            progressionListOrder++;
+                            assignedProg = true;
+                        }
+                    }
+                }
+                Log.LogInfo(ItemCoords.itemCoordList[138].ItemName + " " + ItemCoords.itemCoordList[138].Assignable);
+
                 int itemsToRandomize = ItemCoords.itemCoordList.Count;
                 int numItemsRand = 0;
                 for (int j = 0, noAssignablesFailsafe = 0; j <= itemsToRandomize && noAssignablesFailsafe < 2000;)
                 {
-                    if (listOrder == weaponItemToIgnore)
+                    if (listOrder == weaponItemToIgnore || pool1[listOrder] <= progressionItemsLength)
                     {
                         listOrder++;
                     }
@@ -236,6 +323,7 @@ namespace GrimeRandomizer
                 }
 
                 itemsRandomized = true;
+                numItemsRand = numItemsRand + progressionItemsLength;
                 Log.LogInfo("Randomized " + numItemsRand + " items out of " +itemsToRandomize);
             }
 
@@ -320,26 +408,39 @@ namespace GrimeRandomizer
                                         //Give Walk
                                         break;
                                     case "pull":
+                                        customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
                                         isPullAquired = true;
+                                        customTalentSet = false;
                                         break;
                                     case "itemPull":
+                                        customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
                                         break;
                                     case "airDash":
+                                        customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
+                                        customTalentSet = false;
                                         break;
                                     case "selfPull":
+                                        customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
+                                        customTalentSet = false;
                                         break;
                                     case "doubleJump":
+                                        customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
+                                        customTalentSet = false;
                                         break;
                                     case "hover":
+                                        customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                        customTalentSet = false;
                                         break;
                                     case "sprint":
+                                        customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                        customTalentSet = false;
                                         break;
                                     default:
                                         Log.LogInfo("Changing out item to randomized item " + Hashtable_Items.getHashtable.GetItemByID(keyValuePair.Value.Guid));
@@ -397,26 +498,41 @@ namespace GrimeRandomizer
                                     //Give Walk
                                     break;
                                 case "pull":
-                                    PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
+                                    customTalentSet = true;
+                                    PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[6].talentReference, Hashtable_Talents.getHashtable.getTable[6].talentReference.getRanksData.Length - 1);
+                                    customTalentSet = false;
+
                                     isPullAquired = true;
-                                    break;
+                                    return true;
                                 case "itemPull":
+                                    customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
+                                    customTalentSet = false;
                                     break;
                                 case "airDash":
+                                    customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
+                                    customTalentSet = false;
                                     break;
                                 case "selfPull":
+                                    customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
+                                    customTalentSet = false;
                                     break;
                                 case "doubleJump":
+                                    customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
+                                    customTalentSet = false;
                                     break;
                                 case "hover":
+                                    customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                    customTalentSet = false;
                                     break;
                                 case "sprint":
+                                    customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                    customTalentSet = false;
                                     break;
                                 default:
                                     if (assignedItemsQuantity == 1)
@@ -467,7 +583,7 @@ namespace GrimeRandomizer
 
                 foreach (KeyValuePair<ItemCoord, ItemDefinition> keyValuePair in itemCoordsPair)
                 {
-                    if (talrep2 == keyValuePair.Key.ItemName)
+                    if (talrep2 == keyValuePair.Key.ItemName && !customTalentSet)
                     {
                         switch (keyValuePair.Value.Guid)
                         {
@@ -475,26 +591,40 @@ namespace GrimeRandomizer
                                 //Give Walk
                                 break;
                             case "pull":
+                                customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
                                 isPullAquired = true;
+                                customTalentSet = false;
                                 break;
                             case "itemPull":
+                                customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
+                                customTalentSet = false;
                                 break;
                             case "airDash":
+                                customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
+                                customTalentSet = false;
                                 break;
                             case "selfPull":
+                                customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
+                                customTalentSet = false;
                                 break;
                             case "doubleJump":
+                                customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
+                                customTalentSet = false;
                                 break;
                             case "hover":
+                                customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                customTalentSet = false;
                                 break;
                             case "sprint":
+                                customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
+                                customTalentSet = false;
                                 break;
                             default:
                                 Log.LogInfo("Giving randomized item " + Hashtable_Items.getHashtable.GetItemByID(keyValuePair.Value.Guid));

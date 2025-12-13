@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace GrimeRandomizer
 {
-    internal class ItemPool
+    public class ItemPool
     {
         public static Dictionary<int, ItemDefinition> itemPool = new Dictionary<int, ItemDefinition>();
         private const string Nail = "a643f782-37c6-4509-b2ac-713072570ac2";
@@ -187,6 +187,16 @@ namespace GrimeRandomizer
 
             List<ItemDefinition> itemsToAdd = new List<ItemDefinition>
             {
+                new ItemDefinition("pull"),
+                new ItemDefinition("itemPull"),
+                new ItemDefinition("airDash"),
+                new ItemDefinition("selfPull"),
+                new ItemDefinition("doubleJump"),
+                new ItemDefinition("hover"),
+                new ItemDefinition("sprint"),
+                new ItemDefinition(KilyahStone),
+                new ItemDefinition(StrandOfTheChild),
+
                 new ItemDefinition(OtherwherePhloxChest),
                 new ItemDefinition(OtherwherePhloxHands),
                 new ItemDefinition(OtherwherePhloxLegs),
@@ -483,7 +493,6 @@ namespace GrimeRandomizer
                 new ItemDefinition(PillarFragment, 2),
                 new ItemDefinition(ArdentSand, 1),
                 new ItemDefinition(ArdentSand, 1),
-                new ItemDefinition(KilyahStone),
                 new ItemDefinition(BloodmetalSplinter),
                 new ItemDefinition(BloodmetalShard),
                 new ItemDefinition(BloodmetalShard),
@@ -601,7 +610,6 @@ namespace GrimeRandomizer
                 new ItemDefinition(WholeHusk, 1),
                 new ItemDefinition(WholeHusk, 2),
                 new ItemDefinition(WholeHusk, 3),
-                new ItemDefinition(StrandOfTheChild),
                 new ItemDefinition(FullyFormedHusk, 1),
                 new ItemDefinition(FullyFormedHusk, 1),
                 new ItemDefinition(FullyFormedHusk, 1),
@@ -857,14 +865,6 @@ namespace GrimeRandomizer
                 new ItemDefinition(BreathdewFragment),
                 new ItemDefinition(CrimsonIchor),
                 new ItemDefinition(LivingFlesh, 5),
-
-                new ItemDefinition("pull"),
-                new ItemDefinition("itemPull"),
-                new ItemDefinition("airDash"),
-                new ItemDefinition("selfPull"),
-                new ItemDefinition("doubleJump"),
-                new ItemDefinition("hover"),
-                new ItemDefinition("sprint")
             };
 
             foreach (var item in itemsToAdd)
