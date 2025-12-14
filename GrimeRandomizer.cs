@@ -95,6 +95,7 @@ namespace GrimeRandomizer
             public static bool itemsRandomized = false;
             public static bool kilyahStoneCollected;
             public static bool StrandCollected;
+            public static List<int> progressionCoordsToRemove = new List<int>();
 
             public static bool isPullAquired = false;
             public static bool isSelfPullAquired = false;
@@ -226,15 +227,21 @@ namespace GrimeRandomizer
                                 ItemCoords.itemCoordList[randomProgCoord].ItemsDropped--;
                             }
 
-                            ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[randomProgCoord]);
-                            Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomProgCoord].ItemName + " to " + itemDefProg.Guid);
+                            //Removes after all itemCoordList refreshes, otherwise useless
+                            progressionCoordsToRemove.Add(randomProgCoord);
+                            Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomProgCoord].Coord + " to " + itemDefProg.Guid);
 
                             progressionListOrder++;
                             assignedProg = true;
                         }
                     }
                 }
-                Log.LogInfo(ItemCoords.itemCoordList[138].ItemName + " " + ItemCoords.itemCoordList[138].Assignable);
+
+                //Removes progressionCoords
+                foreach(int toRemove in progressionCoordsToRemove)
+                {
+                    ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[toRemove]);
+                }
 
                 int itemsToRandomize = ItemCoords.itemCoordList.Count;
                 int numItemsRand = 0;
@@ -303,7 +310,7 @@ namespace GrimeRandomizer
                             }
 
                             //Remove this Item Coord from itemCoordList
-                            Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomCoord].ItemName + " to " + itemDef.Guid);
+                            Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomCoord].Coord + " to " + itemDef.Guid);
 
                             if (i == ItemCoords.itemCoordList[randomCoord].ItemsDropped)
                             {
@@ -501,38 +508,52 @@ namespace GrimeRandomizer
                                     customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[6].talentReference, Hashtable_Talents.getHashtable.getTable[6].talentReference.getRanksData.Length - 1);
                                     customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
 
                                     isPullAquired = true;
-                                    return true;
+                                    break;
                                 case "itemPull":
                                     customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
                                     customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
                                     break;
                                 case "airDash":
                                     customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
                                     customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
                                     break;
                                 case "selfPull":
                                     customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
                                     customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
                                     break;
                                 case "doubleJump":
                                     customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
                                     customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
                                     break;
                                 case "hover":
                                     customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                                     customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
                                     break;
                                 case "sprint":
                                     customTalentSet = true;
                                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                                     customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
                                     break;
                                 default:
                                     if (assignedItemsQuantity == 1)

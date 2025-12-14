@@ -47,6 +47,7 @@ namespace GrimeRandomizer
         public static bool _Nerveroot = pull;
         public static bool _feastersLair = pull || airDash;
         public static bool _yrDenFromFeasters = airDash || selfPull;
+        public static bool _yrDen = airDash || doubleJump;
         public static bool _servantsPath = (pull || doubleJump) && kilyahStone;
         public static bool _carvenPalace = pull || doubleJump;
         public static bool _garden = doubleJump && hover || pull && (doubleJump || airDash);
@@ -99,7 +100,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(503.64f, 80.42f, 0.00f), "Bloodmetal Shard"));
             itemCoordList.Add(new ItemCoord(new Vector3(708.71f, 210.51f, 0.00f), "Bloodmetal Splinter"));
 
-            //Unformed Deser);
+            //Unformed Desert
             itemCoordList.Add(new ItemCoord(new Vector3(858.24f, 183.46f, 0.00f), "Fossil Fist"));
             itemCoordList.Add(new ItemCoord(new Vector3(879.40f, 181.57f, 0.00f), "Volatile Blob"));
             itemCoordList.Add(new ItemCoord(new Vector3(908.12f, 179.31f, 0.00f), "Ardent Sand"));
@@ -128,7 +129,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(995.30f, 193.84f, 0.00f), "Bloodmetal Splinter"));
             itemCoordList.Add(new ItemCoord(new Vector3(1028.55f, 209.06f, 0.00f), "Bloodmetal Chunk", walk && (pull && airDash && hover || doubleJump && (airDash || hover))));
 
-            //Lithi);
+            //Lithic
             itemCoordList.Add(new ItemCoord(new Vector3(1066.50f, 195.28f, 0.00f), "Nail"));
             itemCoordList.Add(new ItemCoord(new Vector3(1103.74f, 188.94f, 0.00f), "Unformed Hand"));
             itemCoordList.Add(new ItemCoord(new Vector3(1162.29f, 195.35f, 0.62f), "Living Rock"));
@@ -183,7 +184,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(1286.93f, 209.13f, 0.00f), "Breathdew Droplet", airDash));
             itemCoordList.Add(new ItemCoord(new Vector3(69f, 69f, 69f), "Pull"));
 
-            //Gloomnes);
+            //Gloomnest
             itemCoordList.Add(new ItemCoord(new Vector3(1020.28f, 167.51f, 0.00f), "Burst Lantern"));
             itemCoordList.Add(new ItemCoord(new Vector3(989.47f, 156.28f, 0.00f), "Bloodmetal Splinter", _Gloomnest));
             itemCoordList.Add(new ItemCoord(new Vector3(981.54f, 160.03f, 0.00f), "Bloodmetal Splinter", _Gloomnest));
@@ -215,9 +216,28 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(1070.70f, 158.57f, 0.00f), "Thirsting Sand", doubleJump || pull));
             itemCoordList.Add(new ItemCoord(new Vector3(1092.71f, 154.62f, 0.00f), "Breathdew Shard", doubleJump || airDash && pull));
 
-            //Yr De);
+            //Yr Den
+            itemCoordList.Add(new ItemCoord(new Vector3(764.62f, 96.31f, 0.00f), "Crimson Ichor", _yrDenFromFeasters));
+            itemCoordList.Add(new ItemCoord(new Vector3(805.30f, 96.22f, 0.00f), "Rib", _yrDenFromFeasters));
+            itemCoordList.Add(new ItemCoord(new Vector3(798.02f, 102.35f, 0.00f), "Blootmetal Shard", _yrDenFromFeasters));
+            itemCoordList.Add(new ItemCoord(new Vector3(803.95f, 102.35f, 0.00f), "Bloodmetal Shard", _yrDenFromFeasters));
+            itemCoordList.Add(new ItemCoord(new Vector3(800.81f, 127.31f, 0.00f), "Curved Glaive", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(836.92f, 125.25f, 0.00f), "Unformed Torso", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(846.17f, 140.60f, 0.00f), "Bloodmetal Shard", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(795.19f, 150.35f, 0.00f), "Unformed Torso", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(779.91f, 152.59f, 0.00f), "Bloodmetal Shard", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(836.92f, 159.89f, 0.00f), "Unformed Torso", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(876.28f, 125.22f, 0.00f), "First Yr Chest", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(862.17f, 151.31f, 0.00f), "First Yr Hands", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(874.39f, 147.10f, 0.00f), "First Yr Legs", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(774.08f, 137.58f, 0.00f), "Unformed Torso", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(789.58f, 137.58f, 0.00f), "Levolam Dust", _yrDen));
+            itemCoordList.Add(new ItemCoord(new Vector3(774.21f, 175.09f, 0.00f), "Broken Yr Sword"));
+            itemCoordList.Add(new ItemCoord(new Vector3(791.34f, 171.90f, 0.00f), "Bloodmetal Splinter"));
+            itemCoordList.Add(new ItemCoord(new Vector3(778.51f, 165.90f, 0.00f), "Ardent Sand"));
+            itemCoordList.Add(new ItemCoord(new Vector3(823.46f, 161.39f, 0.00f), "Yr Glave"));
 
-            //Worldpilla);
+            //Worldpillar
             itemCoordList.Add(new ItemCoord(new Vector3(1594.98f, 188.52f, 0.00f), "Pillar Fragment", _Worldpillar));
             itemCoordList.Add(new ItemCoord(new Vector3(1554.96f, 196.91f, 0.00f), "Pillar Fragment", _Worldpillar));
             itemCoordList.Add(new ItemCoord(new Vector3(1567.94f, 198.63f, 0.00f), "Bone Grinder", (doubleJump || airDash) && itemPull && _Worldpillar));
@@ -252,7 +272,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(1621.35f, 230.88f, 0.00f), "Bloodmetal Shard", _Worldpillar));
             itemCoordList.Add(new ItemCoord(new Vector3(1624.08f, 45.75f, 0.00f), "Pillar Fragment", (doubleJump || pull) && hover || pull && (doubleJump || airDash)));
 
-            //Nerveroo);
+            //Nerveroot
             itemCoordList.Add(new ItemCoord(new Vector3(1515.20f, 198.78f, 0.00f), "Bloodmetal Splinter", _Nerveroot));
             itemCoordList.Add(new ItemCoord(new Vector3(1504.56f, 181.82f, 0.00f), "Charcoal Root", _Nerveroot));
             itemCoordList.Add(new ItemCoord(new Vector3(1509.11f, 172.72f, 0.00f), "Charcoal Root", _Nerveroot));
@@ -302,7 +322,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(1437.40f, 74.31f, 0.00f), "Levolam Dust", _Nerveroot && airDash));
             itemCoordList.Add(new ItemCoord(new Vector3(1414.89f, 74.31f, 0.00f), "Clutching Root", _Nerveroot && airDash));
 
-            //Feaster's Lai);
+            //Feaster's Lair
             itemCoordList.Add(new ItemCoord(new Vector3(1170.80f, 75.00f, 0.00f), "Rib", pull && doubleJump || airDash));
             itemCoordList.Add(new ItemCoord(new Vector3(1189.75f, 56.23f, 0.00f), "Bloodmetal Shard", _feastersLair));
             itemCoordList.Add(new ItemCoord(new Vector3(1053.38f, 118.99f, 0.00f), "Ardent Sand", airDash || doubleJump));
@@ -361,7 +381,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(889.13f, 18.81f, 0.00f), "Urn Of Volatile Eyes", airDash));
             itemCoordList.Add(new ItemCoord(new Vector3(69f, 69f, 69f), "Item Pull", airDash));
 
-            //Servant's Pat);
+            //Servant's Path
             itemCoordList.Add(new ItemCoord(new Vector3(1655.60f, 225.24f, 0.00f), "Pillar Fragment", (pull || doubleJump) && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(1686.32f, 214.75f, 0.00f), "Bloodmetal Splinter", (pull || doubleJump) && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(1716.22f, 218.97f, 0.00f), "Servant Needle", (pull || doubleJump) && kilyahStone));
@@ -390,7 +410,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(2102.70f, 153.32f, 0.00f), "Motley Pearl", airDash && (pull || doubleJump) && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2094.69f, 163.95f, 0.00f), "Bloodmetal Chunk", airDash && (pull || doubleJump) && kilyahStone));
 
-            //Carven Palac);
+            //Carven Palace
             itemCoordList.Add(new ItemCoord(new Vector3(2236.27f, 227.21f, 0.00f), "Charcoal Root", _carvenPalace && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2240.27f, 227.18f, 0.00f), "Clutching Root", _carvenPalace && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2242.41f, 227.19f, 0.00f), "Shard Field", _carvenPalace && kilyahStone));
@@ -499,12 +519,96 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(2144.25f, 59.58f, 0.00f), "Volatile Blob", pull && airDash && selfPull && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2167.43f, 59.58f, 0.00f), "Awakening Gasp", pull && airDash && selfPull && kilyahStone));
 
-            //Garde);
+            //Garden
             itemCoordList.Add(new ItemCoord(new Vector3(1628.66f, 26.35f, 0.00f), "Motley Swords", pull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(1659.48f, 2.08f, 0.00f), "Bloodmetal Shard", (doubleJump || pull) && hover || pull && (doubleJump || airDash)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1672.44f, -9.95f, 0.00f), "Bloodmetal Chunk", (doubleJump || pull) && hover || pull && (doubleJump || airDash)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1672.91f, 22.55f, 0.00f), "Pillar Fragment", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1728.94f, 14.70f, 0.00f), "Awakening Gasp", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1820.88f, 12.79f, 0.00f), "Motley Pearl", _garden && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(1756.07f, 24.24f, 0.00f), "Bloodmetal Shard", _garden && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(1786.72f, 28.81f, 0.50f), "Unformed Body", _garden && itemPull, false, 1, true));
+            itemCoordList.Add(new ItemCoord(new Vector3(1717.45f, 44.48f, 0.00f), "Breathdew Droplet", _garden && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(1691.05f, 40.97f, 0.00f), "Bloodmetal Chunk", _garden && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(1785.97f, 22.38f, 0.50f), "Clutching Root", _garden && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(1802.62f, 20.41f, 0.00f), "Living Rock", _garden && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(1797.89f, 1.23f, 0.50f), "Breathdew Shard", _garden, false, 1, true));
+            itemCoordList.Add(new ItemCoord(new Vector3(1762.23f, -4.21f, 0.00f), "Urn Of Volatile Eyes", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1722.92f, 2.98f, 0.00f), "Awakening Gasp", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1734.06f, 0.59f, 0.00f), "Living Rock", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1794.92f, -4.04f, 0.00f), "Awakening Gasp", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1818.35f, 2.97f, 0.00f), "Motley Pearl", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1845.50f, -21.05f, 0.00f), "Breathdew Shard", _garden));
+            itemCoordList.Add(new ItemCoord(new Vector3(1884.85f, -6.68f, 0.00f), "Bloodmetal Chunk", pull && (doubleJump || airDash && kilyahStone && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1921.45f, -14.10f, 0.00f), "Breathdew Fragment", pull && (doubleJump || airDash && kilyahStone && selfPull), false, 1, true));
+            itemCoordList.Add(new ItemCoord(new Vector3(1872.50f, -43.11f, 0.00f), "Bloodmetal Chunk", pull && (doubleJump || kilyahStone) && selfPull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(1877.93f, -42.61f, 0.00f), "Levolam Dust", pull && (doubleJump || kilyahStone) && selfPull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(1941.47f, -31.90f, 0.00f), "Petalgem Chest", pull && (doubleJump || airDash && kilyahStone && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1941.91f, -34.39f, 0.00f), "Petalgem Hands", pull && (doubleJump || airDash && kilyahStone && selfPull) && (itemPull || airDash && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1938.00f, -34.44f, 0.00f), "Petalgem Legs", pull && (doubleJump || airDash && kilyahStone && selfPull) && (itemPull || airDash && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1953.77f, -47.44f, 0.00f), "Unformed Body", pull && (doubleJump || airDash && kilyahStone && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1972.20f, -23.51f, 0.00f), "Breathdew Droplet", pull && (doubleJump && (airDash || selfPull) || airDash && kilyahStone && selfPull), false, 1, true));
+            itemCoordList.Add(new ItemCoord(new Vector3(1968.75f, -55.18f, 0.00f), "Breathdew Droplet", pull && (doubleJump || airDash && kilyahStone && selfPull) && (itemPull || airDash && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(2012.96f, -74.35f, 0.00f), "Levolam Dust", pull && (doubleJump || airDash && kilyahStone && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(1931.08f, -74.48f, 0.00f), "Crimson Ichor", pull && (doubleJump || airDash && kilyahStone) && selfPull && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2040.45f, -19.36f, 0.00f), "Clutching Root", pull && (doubleJump || airDash && kilyahStone && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(2033.01f, 0.42f, 0.00f), "Breathdew Shard", pull && (doubleJump || airDash && kilyahStone && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(2045.82f, 5.50f, 0.00f), "Breathdew Droplet", pull && (doubleJump || airDash && kilyahStone && selfPull)));
+            itemCoordList.Add(new ItemCoord(new Vector3(2093.08f, -32.07f, 0.00f), "Unformed Body", pull && (doubleJump || airDash && kilyahStone && selfPull) && itemPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2090.36f, -50.82f, 0.00f), "Clutching Root", pull && (doubleJump || kilyahStone) && selfPull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(2060.25f, -38.01f, 0.00f), "Shard Field", pull && (doubleJump || kilyahStone) && selfPull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(2063.71f, -43.25f, 0.04f), "Bloodmetal Shard", pull && (doubleJump || kilyahStone) && selfPull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(2047.20f, -41.01f, 0.00f), "Awakening Gasp", pull && (doubleJump || kilyahStone) && selfPull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(2076.39f, 37.10f, 0.00f), "Motley Pearl", pull && (doubleJump || kilyahStone) && selfPull && airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(2113.05f, 36.53f, 0.00f), "Clutching Root", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2163.05f, 40.88f, 0.00f), "Prying Sickles", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2171.55f, 44.07f, 0.00f), "Bloodmetal Chunk", pull && doubleJump && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2022.66f, 31.49f, 0.00f), "Breathdew Fragment", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2030.06f, 44.52f, 0.00f), "Clutching Root", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2039.20f, 52.35f, 0.00f), "Shard Field", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2027.35f, 66.02f, 0.00f), "Bloodmetal Splinter", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2026.72f, 55.47f, 0.00f), "Bloodmetal Chunk", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2025.53f, 81.70f, 0.00f), "Bloodmetal Shard", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2041.96f, 79.47f, 0.00f), "Unformed Body", pull && (doubleJump || airDash && kilyahStone) && selfPull, false, 1, true));
+            itemCoordList.Add(new ItemCoord(new Vector3(2105.19f, 107.25f, 0.00f), "Fully Formed Husk", pull && (doubleJump || airDash && kilyahStone) && selfPull));
+            itemCoordList.Add(new ItemCoord(new Vector3(2069.67f, 79.96f, 0.00f), "Breathdew Fragment", pull && doubleJump && selfPull && airDash && hover));
 
-            //Childbe);
-            //Beyond The Barrie);
-            //Cenotaph Cit);
+            //Childbed
+            itemCoordList.Add(new ItemCoord(new Vector3(1296.19f, 31.22f, 0.00f), "Awakening Gasp", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1249.67f, -15.68f, 0.00f), "Bloodmetal Shard", _childBed && sprint));
+            itemCoordList.Add(new ItemCoord(new Vector3(1246.98f, -15.68f, 0.00f), "Bloodmetal Shard", _childBed && sprint));
+            itemCoordList.Add(new ItemCoord(new Vector3(1349.98f, -2.84f, 0.00f), "Marrow Chest", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1347.29f, -15.33f, 0.00f), "Marrow Hands", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1308.67f, 25.19f, 0.00f), "Marrow Legs", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1353.31f, -21.58f, 0.00f), "Clutching Root", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(69f, 69f, 69f), "Teleport", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1371.87f, -65.00f, 0.00f), "Blooming Legs", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1475.49f, -53.04f, 0.00f), "Urn Of Volatile Eyes", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1483.57f, -53.54f, 0.00f), "Bloodmetal Chunk", _childBed));
+            itemCoordList.Add(new ItemCoord(new Vector3(1411.91f, -16.60f, 0.00f), "Unformed Body", _childBed && doubleJump && selfPull));
+
+            //Beyond The Barrier
+            itemCoordList.Add(new ItemCoord(new Vector3(2405.96f, 228.92f, 0.00f), "Breathdew Droplet", _beyondTheBarrier));
+            itemCoordList.Add(new ItemCoord(new Vector3(2523.91f, 224.31f, 0.00f), "Breathdew Droplet", _beyondTheBarrier));
+            itemCoordList.Add(new ItemCoord(new Vector3(2569.05f, 228.47f, 0.00f), "Breathdew Droplet", _beyondTheBarrier));
+            itemCoordList.Add(new ItemCoord(new Vector3(2492.50f, 270.82f, 0.00f), "Living Flesh", pull && selfPull && kilyahStone && unsealer));
+            itemCoordList.Add(new ItemCoord(new Vector3(2490.61f, 270.82f, 0.00f), "Breathdew Droplet", pull && selfPull && kilyahStone && unsealer));
+            itemCoordList.Add(new ItemCoord(new Vector3(2401.18f, 253.89f, 0.00f), "Crimson Ichor", pull && selfPull && kilyahStone && unsealer));
+            itemCoordList.Add(new ItemCoord(new Vector3(2535.18f, 262.21f, 0.00f), "Breathdew Fragment", pull && selfPull && kilyahStone && unsealer));
+
+            //Cenotaph City
+            itemCoordList.Add(new ItemCoord(new Vector3(2734.98f, 301.69f, 0.00f), "Breathdew Shard", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2800.79f, 365.29f, 0.83f), "Crimson Ichor", _CenotaphCity && doubleJump));
+            itemCoordList.Add(new ItemCoord(new Vector3(2811.42f, 310.19f, 0.00f), "Breathdew Shard", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2867.68f, 291.87f, 0.00f), "Levolam Dust", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2900.55f, 339.42f, 1.57f), "Unformed Head", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2901.55f, 339.42f, 1.57f), "Unformed Head", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2902.55f, 339.42f, 1.57f), "Unformed Head", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2903.80f, 339.42f, 1.57f), "Unformed Head", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2904.80f, 339.42f, 1.57f), "Unformed Head", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2905.80f, 339.42f, 1.57f), "Unformed Head", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2907.41f, 339.57f, 1.57f), "Unformed Head", _CenotaphCity));
+            itemCoordList.Add(new ItemCoord(new Vector3(2816.99f, 364.85f, 0.00f), "Fully Formed Husk", _CenotaphCity && doubleJump));
         }
 
     }
