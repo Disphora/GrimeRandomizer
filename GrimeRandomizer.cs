@@ -20,6 +20,7 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using static GrimeRandomizer.ItemPool;
+using System.Linq;
 
 namespace GrimeRandomizer
 {
@@ -94,7 +95,13 @@ namespace GrimeRandomizer
             public static bool itemsRandomized = false;
             public static bool kilyahStoneCollected;
             public static bool StrandCollected;
-            public static List<int> progressionCoordsToRemove = new List<int>();
+            public static List<int> coordsToRemove = new List<int>();
+            public static int weaponItemToIgnore = 0;
+            public static int progressionItemsLength = 9;
+            public static int itemsToRandomize;
+            public static int numItemsRand = 0;
+            public static int totalNumItemsRand = 0;
+            public static int lastRandomized = 0;
 
             public static bool isPullAquired = false;
             public static bool isSelfPullAquired = false;
@@ -119,6 +126,7 @@ namespace GrimeRandomizer
                 if (!itemsRandomized)
                 {
                     ItemCoords.RefreshICList();
+                    itemsToRandomize = ItemCoords.itemCoordList.Count;
                     RandomlyAssignItems();
                 }
 
@@ -130,7 +138,6 @@ namespace GrimeRandomizer
                 Log.LogInfo("Randomizing Items");
 
                 //Pick a weaponless ItemCoord
-                int weaponItemToIgnore = 0;
                 int randomWeaponless = UnityEngine.Random.Range(0, 7);
                 if (ItemCoords.itemCoordList[randomWeaponless].Weaponless)
                 {
@@ -150,6 +157,7 @@ namespace GrimeRandomizer
 
                     //Remove this Item Coord from itemCoordList
                     ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[randomWeaponless]);
+                    coordsToRemove.Add(randomWeaponless);
 
                     //Remove assigned weapon from ItemPool
                     //Item is ignored by checking weaponItemToIgnore
@@ -161,93 +169,117 @@ namespace GrimeRandomizer
 
                 //Randomly assign progression items
 
-                int progressionItemsLength = 9;
                 for (int l = 0; l < progressionItemsLength; l++)
                 {
                     bool assignedProg = false;
                     int randomProgressionItem = progressionPool[progressionListOrder];
+                    int whileloopsafety = 0;
 
                     while (!assignedProg)
                     {
                         int randomProgCoord = UnityEngine.Random.Range(0, ItemCoords.itemCoordList.Count);
+
+                        if (whileloopsafety > 2000)
+                        {
+                            randomProgCoord = lastRandomized;
+                            coordsToRemove.RemoveAt(coordsToRemove.Count - 1);
+                            RefreshList();
+                            listOrder--;
+                        }
+
                         if (ItemCoords.itemCoordList[randomProgCoord].Assignable)
                         {
                             ItemPool.itemPool.TryGetValue(randomProgressionItem, out ItemPool.ItemDefinition itemDefProg);
                             itemCoordsPair.Add(ItemCoords.itemCoordList[randomProgCoord], itemDefProg);
-
-                            switch (itemDefProg.Guid)
-                            {
-                                case "36df0fa1-a266-4973-85b8-702ac10c2f6f":
-                                    ItemCoords.kilyahStone = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "e497b557-1320-4df5-a844-3985e80b6d25":
-                                    ItemCoords.strandOfTheChild = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "walk":
-                                    ItemCoords.walk = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "pull":
-                                    ItemCoords.pull = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "itemPull":
-                                    ItemCoords.itemPull = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "airDash":
-                                    ItemCoords.airDash = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "selfPull":
-                                    ItemCoords.selfPull = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "doubleJump":
-                                    ItemCoords.doubleJump = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "hover":
-                                    ItemCoords.hover = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                case "sprint":
-                                    ItemCoords.sprint = true;
-                                    ItemCoords.RefreshICList();
-                                    break;
-                                default:
-                                    break;
-                            }
 
                             if (ItemCoords.itemCoordList[randomProgCoord].ItemsDropped > 1)
                             {
                                 ItemCoords.itemCoordList[randomProgCoord].ItemsDropped--;
                             }
 
-                            //Removes after all itemCoordList refreshes, otherwise useless
-                            progressionCoordsToRemove.Add(randomProgCoord);
+                            ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[randomProgCoord]);
+                            coordsToRemove.Add(randomProgCoord);
+
+                            switch (itemDefProg.Guid)
+                            {
+                                case "36df0fa1-a266-4973-85b8-702ac10c2f6f":
+                                    RandomizeNonProgression();
+                                    ItemCoords.kilyahStone = true;
+                                    RefreshList();
+                                    break;
+                                case "e497b557-1320-4df5-a844-3985e80b6d25":
+                                    RandomizeNonProgression();
+                                    ItemCoords.strandOfTheChild = true;
+                                    RefreshList();
+                                    break;
+                                case "walk":
+                                    RandomizeNonProgression();
+                                    ItemCoords.walk = true;
+                                    RefreshList();
+                                    break;
+                                case "pull":
+                                    RandomizeNonProgression();
+                                    ItemCoords.pull = true;
+                                    RefreshList();
+                                    break;
+                                case "itemPull":
+                                    RandomizeNonProgression();
+                                    ItemCoords.itemPull = true;
+                                    RefreshList();
+                                    break;
+                                case "airDash":
+                                    RandomizeNonProgression();
+                                    ItemCoords.airDash = true;
+                                    RefreshList();
+                                    break;
+                                case "selfPull":
+                                    RandomizeNonProgression();
+                                    ItemCoords.selfPull = true;
+                                    RefreshList();
+                                    break;
+                                case "doubleJump":
+                                    RandomizeNonProgression();
+                                    ItemCoords.doubleJump = true;
+                                    RefreshList();
+                                    break;
+                                case "hover":
+                                    RandomizeNonProgression();
+                                    ItemCoords.hover = true;
+                                    RefreshList();
+                                    break;
+                                case "sprint":
+                                    RandomizeNonProgression();
+                                    ItemCoords.sprint = true;
+                                    RefreshList();
+                                    break;
+                                default:
+                                    break;
+                            }
+
                             Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomProgCoord].Coord + " to " + itemDefProg.Guid);
 
                             progressionListOrder++;
+                            totalNumItemsRand = totalNumItemsRand + numItemsRand;
                             assignedProg = true;
                         }
+                        whileloopsafety++;
                     }
                 }
 
                 ItemCoords.unsealer = true;
                 ItemCoords.walk = true;
-                ItemCoords.RefreshICList();
+                RefreshList();
 
-                //Removes progressionCoords
-                foreach (int toRemove in progressionCoordsToRemove)
-                {
-                    ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[toRemove]);
-                }
+                RandomizeNonProgression();
 
-                int itemsToRandomize = ItemCoords.itemCoordList.Count;
-                int numItemsRand = 0;
+                itemsRandomized = true;
+                totalNumItemsRand = totalNumItemsRand + progressionItemsLength;
+                Log.LogInfo("Randomized " + totalNumItemsRand + " items out of " + ItemPool.itemPool.Count);
+            }
+
+            public static void RandomizeNonProgression()
+            {
+                itemsToRandomize = ItemCoords.itemCoordList.Count;
                 for (int j = 0, noAssignablesFailsafe = 0; j <= itemsToRandomize && noAssignablesFailsafe < 2000;)
                 {
                     if (listOrder == weaponItemToIgnore || pool1[listOrder] <= progressionItemsLength)
@@ -274,50 +306,14 @@ namespace GrimeRandomizer
                                 itemCoordsPair.Add(ItemCoords.itemCoordList[randomCoord], itemDef);
                             }
 
-                            //Check if item is important for progression
-                            //Set progression bool to true if item is important for progression
-                            switch (itemDef.Guid)
-                            {
-                                case "36df0fa1-a266-4973-85b8-702ac10c2f6f":
-                                    ItemCoords.kilyahStone = true;
-                                    break;
-                                case "e497b557-1320-4df5-a844-3985e80b6d25":
-                                    ItemCoords.strandOfTheChild = true;
-                                    break;
-                                case "walk":
-                                    ItemCoords.walk = true;
-                                    break;
-                                case "pull":
-                                    ItemCoords.pull = true;
-                                    break;
-                                case "itemPull":
-                                    ItemCoords.itemPull = true;
-                                    break;
-                                case "airDash":
-                                    ItemCoords.airDash = true;
-                                    break;
-                                case "selfPull":
-                                    ItemCoords.selfPull = true;
-                                    break;
-                                case "doubleJump":
-                                    ItemCoords.doubleJump = true;
-                                    break;
-                                case "hover":
-                                    ItemCoords.hover = true;
-                                    break;
-                                case "sprint":
-                                    ItemCoords.sprint = true;
-                                    break;
-                                default:
-                                    break;
-                            }
-
                             //Remove this Item Coord from itemCoordList
                             Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomCoord].Coord + " to " + itemDef.Guid);
 
                             if (i == ItemCoords.itemCoordList[randomCoord].ItemsDropped)
                             {
                                 ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[randomCoord]);
+                                coordsToRemove.Add(randomCoord);
+                                lastRandomized = randomCoord;
                             }
 
                             //Remove assigned items from ItemPool
@@ -331,10 +327,16 @@ namespace GrimeRandomizer
                     }
                     noAssignablesFailsafe++;
                 }
+            }
 
-                itemsRandomized = true;
-                numItemsRand = numItemsRand + progressionItemsLength;
-                Log.LogInfo("Randomized " + numItemsRand + " items out of " +itemsToRandomize);
+            public static void RefreshList()
+            {
+                ItemCoords.RefreshICList();
+
+                foreach (int toRemove in coordsToRemove)
+                {
+                    ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[toRemove]);
+                }
             }
 
             public static bool GetCoord(PickableItemHandler __instance)
