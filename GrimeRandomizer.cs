@@ -20,7 +20,6 @@ using TMPro;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using static GrimeRandomizer.ItemPool;
-using RandomizerCore.Logic;
 
 namespace GrimeRandomizer
 {
@@ -237,8 +236,12 @@ namespace GrimeRandomizer
                     }
                 }
 
+                ItemCoords.unsealer = true;
+                ItemCoords.walk = true;
+                ItemCoords.RefreshICList();
+
                 //Removes progressionCoords
-                foreach(int toRemove in progressionCoordsToRemove)
+                foreach (int toRemove in progressionCoordsToRemove)
                 {
                     ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[toRemove]);
                 }
