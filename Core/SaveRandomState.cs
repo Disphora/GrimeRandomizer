@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using static GrimeRandomizer.ItemPool;
+using GrimeRandomizer.Data;
 using Newtonsoft.Json;
 
 namespace GrimeRandomizer
@@ -24,7 +24,7 @@ namespace GrimeRandomizer
             SaveRandomState.dataFileName = dataFileName;
         }
 
-        public static void Save(Dictionary<ItemCoord, List<ItemDefinition>> data, string ID)
+        public static void Save(Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>> data, string ID)
         {
             string json = JsonConvert.SerializeObject(data);
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
@@ -43,9 +43,9 @@ namespace GrimeRandomizer
             }
         }
 
-        public static Dictionary<ItemCoord, List<ItemDefinition>> Load(string ID)
+        public static Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>> Load(string ID)
         {
-            Dictionary<ItemCoord, List<ItemDefinition>> data = null;
+            Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>> data = null;
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
             if (File.Exists(savePath))
             {
@@ -58,9 +58,9 @@ namespace GrimeRandomizer
                         json = reader.ReadToEnd();
                     }
 
-                    GrimeRandomizer.Patches.itemsRandomized = true;
+                    RandomizerCore.Instance.ItemsRandomized = true;
                     GrimeRandomizer.Log.LogInfo("Loaded Randomizer State");
-                    data = JsonConvert.DeserializeObject<Dictionary<ItemCoord, List<ItemDefinition>>>(json);
+                    data = JsonConvert.DeserializeObject<Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>>>(json);
                     return data;
                 }
                 catch (Exception e)
@@ -73,8 +73,8 @@ namespace GrimeRandomizer
             else
             {
                 GrimeRandomizer.Log.LogInfo("No save files found");
-                GrimeRandomizer.Patches.itemsRandomized = false;
-                Dictionary<ItemCoord, List<ItemDefinition>> initDictionary = new Dictionary<ItemCoord, List<ItemDefinition>>();
+                RandomizerCore.Instance.ItemsRandomized = false;
+                Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>> initDictionary = new Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>>();
                 return initDictionary;
             }
         }
