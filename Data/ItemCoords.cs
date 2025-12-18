@@ -6,8 +6,6 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using static GrimeRandomizer.GrimeRandomizer.Patches;
-using static GrimeRandomizer.ItemPool;
 
 namespace GrimeRandomizer
 {
@@ -728,4 +726,48 @@ namespace GrimeRandomizer
         }
 
     }
+    // Ajoute cette classe à la fin du fichier Data/ItemCoords.cs (avant la dernière accolade fermante du namespace)
+    public class ItemCoordTypeConverter : TypeConverter
+    {
+        public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+        {
+            return sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+        }
+
+        public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value)
+        {
+            if (value is string text)
+            {
+                // Format attendu: "x,y,z|ItemName"
+                string[] parts = text.Split('|');
+                if (parts.Length >= 2)
+                {
+                    string[] vectorParts = parts[0].Split(',');
+                    if (vectorParts.Length == 3 &&
+                        float.TryParse(vectorParts[0], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float x) &&
+                        float.TryParse(vectorParts[1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float y) &&
+                        float.TryParse(vectorParts[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float z))
+                    {
+                        return new ItemCoord(new Vector3(x, y, z), parts[1]);
+                    }
+                }
+            }
+            return base.ConvertFrom(context, culture, value);
+        }
+
+        public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+        {
+            return destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
+        {
+            if (destinationType == typeof(string) && value is ItemCoord itemCoord)
+            {
+                return itemCoord.ToString();
+            }
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+    }
 }
+

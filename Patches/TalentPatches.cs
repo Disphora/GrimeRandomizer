@@ -9,7 +9,7 @@ namespace GrimeRandomizer.Patches
 {
     public class TalentPatches
     {
-        internal static Dictionary<ItemCoord, List<ItemDefinition>>? itemCoordsPair;
+        internal static Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>>? itemCoordsPair;
         internal static bool customTalentSet = false;
         internal static bool customGiveItem = false;
         internal static bool customFlagSet = false;
@@ -27,7 +27,7 @@ namespace GrimeRandomizer.Patches
             PlayerData_Inventory playerData_Inventory = PlayerData_Inventory.instance;
             ItemCoord kvpToRemove = new ItemCoord(Vector3.zero);
 
-            string[] talentNameSplit = talent.name.Split(' ');
+            string[] talentNameSplit = (talent.name ?? "").Split(' ');
             string talrep1 = talentNameSplit[talentNameSplit.Length - 1].Replace("(", string.Empty);
             string talrep2 = talrep1.Replace(")", string.Empty);
 
@@ -37,11 +37,14 @@ namespace GrimeRandomizer.Patches
                 isRandomizableSkill = true;
             }
 
-            foreach (KeyValuePair<ItemCoord, ItemDefinition> keyValuePair in itemCoordsPair)
+            foreach (KeyValuePair<ItemCoord, List<ItemRepository.ItemDefinition>> keyValuePair in itemCoordsPair)
             {
                 if (talrep2 == keyValuePair.Key.ItemName && !customTalentSet)
                 {
-                    ProcessTalentItem(keyValuePair.Value, unlockSkillsBase, unlockSkillsDLC, playerData_Inventory, ref kvpToRemove);
+                    if (keyValuePair.Value.Count > 0)
+                    {
+                        ProcessTalentItem(keyValuePair.Value[0], unlockSkillsBase, unlockSkillsDLC, playerData_Inventory, ref kvpToRemove);
+                    }
                 }
             }
             itemCoordsPair.Remove(kvpToRemove);
@@ -60,7 +63,7 @@ namespace GrimeRandomizer.Patches
         [HarmonyPrefix]
         public static bool TalentAquiredHijack(Data_Talent talent)
         {
-            string[] talentNameSplit = talent.name.Split(' ');
+            string[] talentNameSplit = (talent.name ?? "").Split(' ');
             string talrep1 = talentNameSplit[talentNameSplit.Length - 1].Replace("(", string.Empty);
             string talrep2 = talrep1.Replace(")", string.Empty);
 
@@ -72,7 +75,7 @@ namespace GrimeRandomizer.Patches
             return true;
         }
 
-        private static void ProcessTalentItem(ItemDefinition itemDef, 
+        private static void ProcessTalentItem(ItemRepository.ItemDefinition itemDef, 
             AccessTools.FieldRef<GameHandler, Data_Talent[]> unlockSkillsBase,
             AccessTools.FieldRef<GameHandler, Data_Talent[]> unlockSkillsDLC,
             PlayerData_Inventory playerData_Inventory,
@@ -82,8 +85,12 @@ namespace GrimeRandomizer.Patches
             {
                 case "ardor":
                     customTalentSet = true;
-                    PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[7].talentReference, 
-                        Hashtable_Talents.getHashtable.getTable[7].talentReference.getRanksData.Length - 1);
+                    var ardorTalent = Hashtable_Talents.getHashtable.getTable[7].talentReference;
+                    if (ardorTalent != null)
+                    {
+                        PlayerData_Talents.instance.SetTalentRank(ardorTalent, 
+                            ardorTalent.getRanksData.Length - 1);
+                    }
                     customTalentSet = false;
                     break;
                 case "pull":

@@ -27,23 +27,23 @@ namespace GrimeRandomizer.Patches
             {
                 if (Hashtable_Items.getHashtable.GetIdByItem(item) == ItemRepository.MaulAxe)
                 {
-                    foreach (KeyValuePair<ItemCoord, ItemDefinition> keyValuePair in core.ItemCoordsPair)
+                    foreach (KeyValuePair<ItemCoord, List<ItemDefinition>> keyValuePair in core.ItemCoordsPair)
                     {
-                        if (keyValuePair.Key.ItemName == "MaulAxe")
+                        if (keyValuePair.Key.ItemName == "MaulAxe" && keyValuePair.Value.Count > 0)
                         {
-                            ProcessItemDefinition(ref item, ref amount, keyValuePair.Value, unlockSkillsBase, unlockSkillsDLC, ref kvpToRemove, core);
+                            ProcessItemDefinition(ref item, ref amount, keyValuePair.Value[0], unlockSkillsBase, unlockSkillsDLC, ref kvpToRemove, core);
                         }
                     }
                 }
                 else
                 {
-                    item = null;
+                    // Item is null reference type, skip processing
                     amount = 0;
                 }
             }
             else
             {
-                foreach (KeyValuePair<ItemCoord, ItemDefinition> keyValuePair in core.ItemCoordsPair)
+                foreach (KeyValuePair<ItemCoord, List<ItemDefinition>> keyValuePair in core.ItemCoordsPair)
                 {
                     if (core.ItemCollectedTemp.x > keyValuePair.Key.Coord.x - 0.3 && core.ItemCollectedTemp.x < keyValuePair.Key.Coord.x + 0.3 && 
                         core.ItemCollectedTemp.y > keyValuePair.Key.Coord.y - 0.3 && core.ItemCollectedTemp.y < keyValuePair.Key.Coord.y + 0.3)
@@ -51,7 +51,10 @@ namespace GrimeRandomizer.Patches
                         GrimeRandomizer.Log.LogInfo("Matching: " + keyValuePair.Key.Coord);
                         assignedItemsQuantity++;
 
-                        ProcessItemDefinition(ref item, ref amount, keyValuePair.Value, unlockSkillsBase, unlockSkillsDLC, ref kvpToRemove, core, assignedItemsQuantity);
+                        if (keyValuePair.Value.Count > 0)
+                        {
+                            ProcessItemDefinition(ref item, ref amount, keyValuePair.Value[0], unlockSkillsBase, unlockSkillsDLC, ref kvpToRemove, core, assignedItemsQuantity);
+                        }
                     }
                 }
                 core.ItemCoordsPair.Remove(kvpToRemove);
@@ -76,50 +79,42 @@ namespace GrimeRandomizer.Patches
                     PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[7].talentReference, 
                         Hashtable_Talents.getHashtable.getTable[7].talentReference.getRanksData.Length - 1);
                     amount = 0;
-                    item = null;
                     break;
                 case "pull":
                     PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[6].talentReference, 
                         Hashtable_Talents.getHashtable.getTable[6].talentReference.getRanksData.Length - 1);
                     core.IsPullAquired = true;
                     amount = 0;
-                    item = null;
                     break;
                 case "itemPull":
                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], 
                         unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
                     amount = 0;
-                    item = null;
                     break;
                 case "airDash":
                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], 
                         unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
                     amount = 0;
-                    item = null;
                     break;
                 case "selfPull":
                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], 
                         unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
                     amount = 0;
-                    item = null;
                     break;
                 case "doubleJump":
                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], 
                         unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
                     amount = 0;
-                    item = null;
                     break;
                 case "hover":
                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], 
                         unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                     amount = 0;
-                    item = null;
                     break;
                 case "sprint":
                     PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], 
                         unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                     amount = 0;
-                    item = null;
                     break;
                 default:
                     if (assignedItemsQuantity == 1)
@@ -127,7 +122,7 @@ namespace GrimeRandomizer.Patches
                         GrimeRandomizer.Log.LogInfo("Changing out item to randomized item " + Hashtable_Items.getHashtable.GetItemByID(itemDef.Guid));
                         item = Hashtable_Items.getHashtable.GetItemByID(itemDef.Guid);
                         amount = itemDef.Quantity;
-                        kvpToRemove = new ItemCoord(itemDef.Guid);
+                        kvpToRemove = new ItemCoord(Vector3.zero);
 
                         if (itemDef.Guid == ItemRepository.KilyahStone)
                         {

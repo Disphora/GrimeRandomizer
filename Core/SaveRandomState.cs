@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using GrimeRandomizer.Data;
 using Newtonsoft.Json;
 
 namespace GrimeRandomizer
@@ -43,9 +42,9 @@ namespace GrimeRandomizer
             }
         }
 
-        public static Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>> Load(string ID)
+        public static Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>>? Load(string ID)
         {
-            Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>> data = null;
+            Dictionary<ItemCoord, List<ItemRepository.ItemDefinition>>? data = null;
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
             if (File.Exists(savePath))
             {
