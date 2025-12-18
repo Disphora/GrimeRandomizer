@@ -726,7 +726,6 @@ namespace GrimeRandomizer
         }
 
     }
-    // Ajoute cette classe à la fin du fichier Data/ItemCoords.cs (avant la dernière accolade fermante du namespace)
     public class ItemCoordTypeConverter : TypeConverter
     {
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
@@ -738,7 +737,6 @@ namespace GrimeRandomizer
         {
             if (value is string text)
             {
-                // Format attendu: "x,y,z|ItemName"
                 string[] parts = text.Split('|');
                 if (parts.Length >= 2)
                 {
