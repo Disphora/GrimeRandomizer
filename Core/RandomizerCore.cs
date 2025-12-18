@@ -305,11 +305,11 @@ namespace GrimeRandomizer
                                 ItemCoords.itemCoordList[randomCoord].Coord,
                                 ItemCoords.itemCoordList[randomCoord].ItemName,
                                 ItemCoords.itemCoordList[randomCoord].Assignable);
-                            itemCoordsPair?.Add(multipleSameKeys, itemDefList);
+                            _itemCoordsPair?.Add(multipleSameKeys, itemDefList);
                         }
                         else
                         {
-                            itemCoordsPair?.Add(ItemCoords.itemCoordList[randomCoord], itemDefList);
+                            _itemCoordsPair?.Add(ItemCoords.itemCoordList[randomCoord], itemDefList);
                         }
 
                         GrimeRandomizer.Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomCoord].Coord + " to " + itemDef.Guid);
@@ -317,7 +317,7 @@ namespace GrimeRandomizer
                         if (i == ItemCoords.itemCoordList[randomCoord].ItemsDropped)
                         {
                             ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[randomCoord]);
-                            coordsToRemove?.Add(randomCoord);
+                            _coordsToRemove?.Add(randomCoord);
                             lastRandomized = randomCoord;
                         }
 
@@ -335,9 +335,9 @@ namespace GrimeRandomizer
         {
             ItemCoords.RefreshICList();
 
-            if (coordsToRemove != null)
+            if (_coordsToRemove != null)
             {
-                foreach (int toRemove in coordsToRemove)
+                foreach (int toRemove in _coordsToRemove)
                 {
                     ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[toRemove]);
                 }
