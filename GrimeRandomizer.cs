@@ -23,6 +23,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static GrimeRandomizer.ItemPool;
+using static PlayerDataPreset.Inventory;
 
 namespace GrimeRandomizer
 {
@@ -92,7 +93,7 @@ namespace GrimeRandomizer
             public static bool customTalentSet = false;
             public static bool customGiveItem = false;
             public static Vector3 itemCollectedTemp = Vector3.zero;
-            static Dictionary<ItemCoord, ItemDefinition> itemCoordsPair = new Dictionary<ItemCoord, ItemDefinition>();
+            static Dictionary<ItemCoord, List<ItemDefinition>> itemCoordsPair = new Dictionary<ItemCoord, List<ItemDefinition>>();
             public static int persistentAssignNum = 0;
             public static bool itemsRandomized = false;
             public static bool kilyahStoneCollected;
@@ -157,7 +158,8 @@ namespace GrimeRandomizer
                         getWeapon = itemDef;
                     }
 
-                    itemCoordsPair.Add(ItemCoords.itemCoordList[randomWeaponless], getWeapon);
+                    List <ItemDefinition> getWeaponList = new List<ItemDefinition> { getWeapon };
+                    itemCoordsPair.Add(ItemCoords.itemCoordList[randomWeaponless], getWeaponList);
                     weaponItemToIgnore = num;
 
                     //Remove this Item Coord from itemCoordList
@@ -195,7 +197,8 @@ namespace GrimeRandomizer
                         if (ItemCoords.itemCoordList[randomProgCoord].Assignable)
                         {
                             ItemPool.itemPool.TryGetValue(randomProgressionItem, out ItemPool.ItemDefinition itemDefProg);
-                            itemCoordsPair.Add(ItemCoords.itemCoordList[randomProgCoord], itemDefProg);
+                            List<ItemDefinition> itemDefProgList = new List<ItemDefinition> { itemDefProg };
+                            itemCoordsPair.Add(ItemCoords.itemCoordList[randomProgCoord], itemDefProgList);
 
                             if (ItemCoords.itemCoordList[randomProgCoord].ItemsDropped > 1)
                             {
@@ -750,6 +753,15 @@ namespace GrimeRandomizer
                 return true;
             }
 
+            bool CheckListGuid(IEnumerable<ItemDefinition> items, string guid)
+            {
+                foreach (var item in items)
+                    if (item.Guid == guid)
+                        return true;
+
+                return false;
+            }
+
             //Type Converter to Serialize and Deserialize itemCoordPair Dictionary
             public class ItemCoordTypeConverter : TypeConverter
             {
@@ -759,11 +771,8 @@ namespace GrimeRandomizer
                 public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
                     => destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
 
-                //string to ItemCoord (DESERIALIZATION)
-                public override object ConvertFrom(
-                    ITypeDescriptorContext context,
-                    CultureInfo culture,
-                    object value)
+                //string to ItemCoord
+                public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
                 {
                     if (value is not string s)
                         throw new ArgumentException("Invalid ItemCoord key");
@@ -785,12 +794,8 @@ namespace GrimeRandomizer
                     return new ItemCoord(coord, parts[1]);
                 }
 
-                //ItemCoord to string (SERIALIZATION)
-                public override object ConvertTo(
-                    ITypeDescriptorContext context,
-                    CultureInfo culture,
-                    object value,
-                    Type destinationType)
+                //ItemCoord to string
+                public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
                 {
                     if (destinationType != typeof(string))
                         throw new NotSupportedException();
@@ -801,7 +806,6 @@ namespace GrimeRandomizer
                     return $"{ic.Coord.x:F3},{ic.Coord.y:F3},{ic.Coord.z:F3}|{ic.ItemName}";
                 }
             }
-
         }
     }
 }

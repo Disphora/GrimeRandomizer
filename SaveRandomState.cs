@@ -24,7 +24,7 @@ namespace GrimeRandomizer
             SaveRandomState.dataFileName = dataFileName;
         }
 
-        public static void Save(Dictionary<ItemCoord, ItemDefinition> data, string ID)
+        public static void Save(Dictionary<ItemCoord, List<ItemDefinition>> data, string ID)
         {
             string json = JsonConvert.SerializeObject(data);
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
@@ -43,9 +43,9 @@ namespace GrimeRandomizer
             }
         }
 
-        public static Dictionary<ItemCoord, ItemDefinition> Load(string ID)
+        public static Dictionary<ItemCoord, List<ItemDefinition>> Load(string ID)
         {
-            Dictionary<ItemCoord, ItemDefinition> data = null;
+            Dictionary<ItemCoord, List<ItemDefinition>> data = null;
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
             if (File.Exists(savePath))
             {
@@ -60,7 +60,7 @@ namespace GrimeRandomizer
 
                     GrimeRandomizer.Patches.itemsRandomized = true;
                     GrimeRandomizer.Log.LogInfo("Loaded Randomizer State");
-                    data = JsonConvert.DeserializeObject<Dictionary<ItemCoord, ItemDefinition>>(json);
+                    data = JsonConvert.DeserializeObject<Dictionary<ItemCoord, List<ItemDefinition>>>(json);
                     return data;
                 }
                 catch (Exception e)
@@ -74,7 +74,7 @@ namespace GrimeRandomizer
             {
                 GrimeRandomizer.Log.LogInfo("No save files found");
                 GrimeRandomizer.Patches.itemsRandomized = false;
-                Dictionary<ItemCoord, ItemDefinition> initDictionary = new Dictionary<ItemCoord, ItemDefinition>();
+                Dictionary<ItemCoord, List<ItemDefinition>> initDictionary = new Dictionary<ItemCoord, List<ItemDefinition>>();
                 return initDictionary;
             }
         }
