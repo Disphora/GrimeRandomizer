@@ -4,23 +4,25 @@ using Dreamteck;
 using HarmonyLib;
 using Rewired;
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Xml.Linq;
-using System.IO;
 using TMPro;
-using UnityEngine.UI;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static GrimeRandomizer.ItemPool;
-using System.Linq;
 
 namespace GrimeRandomizer
 {
@@ -123,6 +125,9 @@ namespace GrimeRandomizer
                 }
 
                 pool1.Shuffle();
+
+                itemCoordsPair = SaveRandomState.Load("RandomizedState");
+
                 if (!itemsRandomized)
                 {
                     ItemCoords.RefreshICList();
@@ -197,6 +202,7 @@ namespace GrimeRandomizer
                                 ItemCoords.itemCoordList[randomProgCoord].ItemsDropped--;
                             }
 
+                            Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomProgCoord].Coord + " to " + itemDefProg.Guid);
                             ItemCoords.itemCoordList.Remove(ItemCoords.itemCoordList[randomProgCoord]);
                             coordsToRemove.Add(randomProgCoord);
 
@@ -256,8 +262,6 @@ namespace GrimeRandomizer
                                     break;
                             }
 
-                            Log.LogInfo("Randomized " + ItemCoords.itemCoordList[randomProgCoord].Coord + " to " + itemDefProg.Guid);
-
                             progressionListOrder++;
                             totalNumItemsRand = totalNumItemsRand + numItemsRand;
                             assignedProg = true;
@@ -273,6 +277,7 @@ namespace GrimeRandomizer
                 RandomizeNonProgression();
 
                 itemsRandomized = true;
+                SaveRandomState.Save(itemCoordsPair, "RandomizedState");
                 totalNumItemsRand = totalNumItemsRand + progressionItemsLength;
                 Log.LogInfo("Randomized " + totalNumItemsRand + " items out of " + ItemPool.itemPool.Count);
             }
@@ -416,43 +421,62 @@ namespace GrimeRandomizer
                             {
                                 switch (keyValuePair.Value.Guid)
                                 {
-                                    case "walk":
-                                        //Give Walk
+                                    case "ardor":
+                                        customTalentSet = true;
+                                        PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[7].talentReference, Hashtable_Talents.getHashtable.getTable[7].talentReference.getRanksData.Length - 1);
+                                        customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     case "pull":
                                         customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
                                         isPullAquired = true;
                                         customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     case "itemPull":
                                         customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
+                                        customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     case "airDash":
                                         customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
                                         customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     case "selfPull":
                                         customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
                                         customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     case "doubleJump":
                                         customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
                                         customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     case "hover":
                                         customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                                         customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     case "sprint":
                                         customTalentSet = true;
                                         PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                                         customTalentSet = false;
+                                        amount = 0;
+                                        item = null;
                                         break;
                                     default:
                                         Log.LogInfo("Changing out item to randomized item " + Hashtable_Items.getHashtable.GetItemByID(keyValuePair.Value.Guid));
@@ -506,8 +530,12 @@ namespace GrimeRandomizer
 
                             switch (keyValuePair.Value.Guid)
                             {
-                                case "walk":
-                                    //Give Walk
+                                case "ardor":
+                                    customTalentSet = true;
+                                    PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[7].talentReference, Hashtable_Talents.getHashtable.getTable[7].talentReference.getRanksData.Length - 1);
+                                    customTalentSet = false;
+                                    amount = 0;
+                                    item = null;
                                     break;
                                 case "pull":
                                     customTalentSet = true;
@@ -602,7 +630,7 @@ namespace GrimeRandomizer
                 string talrep2 = talrep1.Replace(")", string.Empty);
 
                 bool isRandomizableSkill = false;
-                if (talrep2 == "Pull")
+                if (talrep2 == "Pull" || talrep2 == "Grow" || talrep2 == "Air Dash" || talrep2 == "Self Pull" || talrep2 == "Pull Items")
                 {
                     isRandomizableSkill = true;
                 }
@@ -613,8 +641,10 @@ namespace GrimeRandomizer
                     {
                         switch (keyValuePair.Value.Guid)
                         {
-                            case "walk":
-                                //Give Walk
+                            case "ardor":
+                                customTalentSet = true;
+                                PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[7].talentReference, Hashtable_Talents.getHashtable.getTable[7].talentReference.getRanksData.Length - 1);
+                                customTalentSet = false;
                                 break;
                             case "pull":
                                 customTalentSet = true;
@@ -710,14 +740,66 @@ namespace GrimeRandomizer
                 randoSettingsButton.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
                 UnityEngine.UI.Button rsButton = randoSettingsButton.GetComponentInChildren<UnityEngine.UI.Button>();
                 rsButton.onClick.SetPersistentListenerState(0, UnityEventCallState.Off);
-                rsButton.onClick.AddListener(() => Application.OpenURL("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+                rsButton.onClick.AddListener(() => SaveRandomState.Delete("RandomizedState"));
                 rsButton.name = "MainMenu_Button_RSettings";
                 panelButtons(__instance).AddItem(rsButton);
                 TextMeshProUGUI randoSettingsButtonText = randoSettingsButton.GetComponentInChildren<TextMeshProUGUI>();
-                randoSettingsButtonText.text = "Randomizer Settings";
+                randoSettingsButtonText.text = "Randomize Again";
                 randoSettingsButtonText.autoSizeTextContainer = true;
 
                 return true;
+            }
+
+            //Type Converter to Serialize and Deserialize itemCoordPair Dictionary
+            public class ItemCoordTypeConverter : TypeConverter
+            {
+                public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+                    => sourceType == typeof(string) || base.CanConvertFrom(context, sourceType);
+
+                public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
+                    => destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
+
+                //string to ItemCoord (DESERIALIZATION)
+                public override object ConvertFrom(
+                    ITypeDescriptorContext context,
+                    CultureInfo culture,
+                    object value)
+                {
+                    if (value is not string s)
+                        throw new ArgumentException("Invalid ItemCoord key");
+
+                    // Expected: x,y,z|ItemName
+                    var parts = s.Split('|');
+                    if (parts.Length != 2)
+                        throw new FormatException($"Invalid ItemCoord format: {s}");
+
+                    var vec = parts[0].Split(',');
+                    if (vec.Length != 3)
+                        throw new FormatException($"Invalid Vector3 format: {parts[0]}");
+
+                    var coord = new Vector3(
+                        float.Parse(vec[0], CultureInfo.InvariantCulture),
+                        float.Parse(vec[1], CultureInfo.InvariantCulture),
+                        float.Parse(vec[2], CultureInfo.InvariantCulture));
+
+                    return new ItemCoord(coord, parts[1]);
+                }
+
+                //ItemCoord to string (SERIALIZATION)
+                public override object ConvertTo(
+                    ITypeDescriptorContext context,
+                    CultureInfo culture,
+                    object value,
+                    Type destinationType)
+                {
+                    if (destinationType != typeof(string))
+                        throw new NotSupportedException();
+
+                    if (value is not ItemCoord ic)
+                        throw new ArgumentException("Invalid ItemCoord");
+
+                    return $"{ic.Coord.x:F3},{ic.Coord.y:F3},{ic.Coord.z:F3}|{ic.ItemName}";
+                }
             }
 
         }

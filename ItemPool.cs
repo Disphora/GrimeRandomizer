@@ -245,6 +245,7 @@ namespace GrimeRandomizer
                 new ItemDefinition(BloodmetalSplinter),
                 new ItemDefinition(BloodmetalSplinter),
                 new ItemDefinition(BloodmetalSplinter),
+                new ItemDefinition("ardor"),
 
                 new ItemDefinition(FossilFist, 1, true),
                 new ItemDefinition(BoulderplateChest),

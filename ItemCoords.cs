@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static GrimeRandomizer.GrimeRandomizer.Patches;
 using static GrimeRandomizer.ItemPool;
 
 namespace GrimeRandomizer
 {
+    [TypeConverter(typeof(ItemCoordTypeConverter))]
     public class ItemCoord
     {
         public Vector3 Coord { get; }
@@ -26,6 +29,32 @@ namespace GrimeRandomizer
             ItemsDropped = itemsDropped;
             FallsDown = fallsDown;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            if (obj is not ItemCoord other)
+                return false;
+
+            return Coord == other.Coord &&
+                   ItemName == other.ItemName;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                hash = hash * 23 + Coord.GetHashCode();
+                hash = hash * 23 + (ItemName?.GetHashCode() ?? 0);
+                return hash;
+            }
+        }
+
+        public override string ToString()
+        => $"{Coord.x:F3},{Coord.y:F3},{Coord.z:F3}|{ItemName}";
     }
 
     public class ItemCoords
@@ -99,6 +128,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(647.44f, 194.87f, 0.00f), "Bloodmetal Splinter"));
             itemCoordList.Add(new ItemCoord(new Vector3(503.64f, 80.42f, 0.00f), "Bloodmetal Shard"));
             itemCoordList.Add(new ItemCoord(new Vector3(708.71f, 210.51f, 0.00f), "Bloodmetal Splinter"));
+            itemCoordList.Add(new ItemCoord(new Vector3(69f, 69f, 69f), "Grow"));
 
             //Unformed Desert
             itemCoordList.Add(new ItemCoord(new Vector3(858.24f, 183.46f, 0.00f), "Fossil Fist"));
@@ -380,7 +410,7 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(926.01f, 16.96f, 0.00f), "Rib", airDash));
             itemCoordList.Add(new ItemCoord(new Vector3(889.75f, 14.59f, 0.00f), "Living Rock", airDash));
             itemCoordList.Add(new ItemCoord(new Vector3(889.13f, 18.81f, 0.00f), "Urn Of Volatile Eyes", airDash));
-            itemCoordList.Add(new ItemCoord(new Vector3(69f, 69f, 69f), "Item Pull", airDash));
+            itemCoordList.Add(new ItemCoord(new Vector3(69f, 69f, 69f), "Pull Items", airDash));
 
             //Servant's Path
             itemCoordList.Add(new ItemCoord(new Vector3(1655.60f, 225.24f, 0.00f), "Pillar Fragment", (pull || doubleJump) && kilyahStone));

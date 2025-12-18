@@ -1,31 +1,32 @@
-﻿using I2.Loc.SimpleJSON;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
+using static GrimeRandomizer.ItemPool;
+using Newtonsoft.Json;
 
 namespace GrimeRandomizer
 {
-    internal class SaveDataItem
+    internal class SaveRandomState
     {
         private static string dataDirPath = Application.persistentDataPath;
 
-        private static string dataFileName = "DataItemSave.json";
+        private static string dataFileName = "RandomStateSave.json";
 
-        public SaveDataItem(string dataDirPath, string dataFileName)
+        public SaveRandomState(string dataDirPath, string dataFileName)
         {
-            SaveDataItem.dataDirPath = dataDirPath;
-            SaveDataItem.dataFileName = dataFileName;
+            SaveRandomState.dataDirPath = dataDirPath;
+            SaveRandomState.dataFileName = dataFileName;
         }
 
-        public static void Save(Data_Item data, string ID)
+        public static void Save(Dictionary<ItemCoord, ItemDefinition> data, string ID)
         {
-            string json = JsonUtility.ToJson(data);
+            string json = JsonConvert.SerializeObject(data);
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
             try
             {
@@ -42,8 +43,9 @@ namespace GrimeRandomizer
             }
         }
 
-        public static Data_Item Load(string ID)
+        public static Dictionary<ItemCoord, ItemDefinition> Load(string ID)
         {
+            Dictionary<ItemCoord, ItemDefinition> data = null;
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
             if (File.Exists(savePath))
             {
@@ -56,9 +58,9 @@ namespace GrimeRandomizer
                         json = reader.ReadToEnd();
                     }
 
-                    Data_Item data = Data_Item.CreateInstance<Data_Item>();
-                    JsonUtility.FromJsonOverwrite(json, data);
-                    data.SetDirty();
+                    GrimeRandomizer.Patches.itemsRandomized = true;
+                    GrimeRandomizer.Log.LogInfo("Loaded Randomizer State");
+                    data = JsonConvert.DeserializeObject<Dictionary<ItemCoord, ItemDefinition>>(json);
                     return data;
                 }
                 catch (Exception e)
@@ -71,11 +73,13 @@ namespace GrimeRandomizer
             else
             {
                 GrimeRandomizer.Log.LogInfo("No save files found");
-                return null;
+                GrimeRandomizer.Patches.itemsRandomized = false;
+                Dictionary<ItemCoord, ItemDefinition> initDictionary = new Dictionary<ItemCoord, ItemDefinition>();
+                return initDictionary;
             }
         }
 
-        public static void Delete(Data_Item data, string ID)
+        public static void Delete(string ID)
         {
             string savePath = Path.Combine(dataDirPath, ID, dataFileName);
             try
