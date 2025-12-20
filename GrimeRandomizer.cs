@@ -186,6 +186,7 @@ namespace GrimeRandomizer
 
                         if (whileloopsafety > 2000)
                         {
+                            itemCoordsPair.Remove(ItemCoords.itemCoordList[lastRandomized]);
                             randomProgCoord = lastRandomized;
                             coordsToRemove.RemoveAt(coordsToRemove.Count - 1);
                             RefreshList();

@@ -30,29 +30,6 @@ namespace GrimeRandomizer
             FallsDown = fallsDown;
         }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(this, obj))
-                return true;
-
-            if (obj is not ItemCoord other)
-                return false;
-
-            return Coord == other.Coord &&
-                   ItemName == other.ItemName;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 17;
-                hash = hash * 23 + Coord.GetHashCode();
-                hash = hash * 23 + (ItemName?.GetHashCode() ?? 0);
-                return hash;
-            }
-        }
-
         public override string ToString()
         => $"{Coord.x:F3},{Coord.y:F3},{Coord.z:F3}|{ItemName}";
     }
