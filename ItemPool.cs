@@ -188,13 +188,13 @@ namespace GrimeRandomizer
             List<ItemDefinition> itemsToAdd = new List<ItemDefinition>
             {
                 new ItemDefinition("pull"),
-                new ItemDefinition("itemPull"),
                 new ItemDefinition("airDash"),
-                new ItemDefinition("selfPull"),
+                new ItemDefinition(KilyahStone),
                 new ItemDefinition("doubleJump"),
                 new ItemDefinition("hover"),
+                new ItemDefinition("selfPull"),
+                new ItemDefinition("itemPull"),
                 new ItemDefinition("sprint"),
-                new ItemDefinition(KilyahStone),
                 new ItemDefinition(StrandOfTheChild),
 
                 new ItemDefinition(OtherwherePhloxChest),

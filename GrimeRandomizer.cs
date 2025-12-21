@@ -82,8 +82,10 @@ namespace GrimeRandomizer
         {
             public static List<int> pool1 = new List<int>();
             public static List<int> progressionPool = new List<int>();
+            public static List<int> progressionPool2 = new List<int>();
             public static int listOrder = 0;
             public static int progressionListOrder = 0;
+            public static int progressionListOrder2 = 0;
             public static bool pickedItem = false;
             public static bool pickedItem2 = false;
             public static Vector3 lastPos = Vector3.zero;
@@ -113,11 +115,19 @@ namespace GrimeRandomizer
                 PlayerData_Inventory playerData_Inventory = PlayerData_Inventory.instance;
                 ItemPool.AddItems();
 
-                for (int i = 0; i < 9; i++)
+                for (int i = 0; i < progressionItemsLength; i++)
                 {
-                    progressionPool.Add(i);
+                    if (i < 4)
+                    {
+                        progressionPool.Add(i);
+                    }
+                    else
+                    {
+                        progressionPool2.Add(i);
+                    }
                 }
                 progressionPool.Shuffle();
+                progressionPool2.Shuffle();
 
                 for (int i = 0; i < ItemPool.itemPool.Count; i++)
                 {
@@ -177,7 +187,15 @@ namespace GrimeRandomizer
                 for (int l = 0; l < progressionItemsLength; l++)
                 {
                     bool assignedProg = false;
-                    int randomProgressionItem = progressionPool[progressionListOrder];
+                    int randomProgressionItem;
+                    if (l < 4)
+                    {
+                        randomProgressionItem = progressionPool[progressionListOrder];
+                    }
+                    else
+                    {
+                        randomProgressionItem = progressionPool2[progressionListOrder2];
+                    }
                     int whileloopsafety = 0;
 
                     while (!assignedProg)
@@ -186,6 +204,7 @@ namespace GrimeRandomizer
 
                         if (whileloopsafety > 2000)
                         {
+                            Log.LogInfo("Safety: Getting Last Coord");
                             itemCoordsPair.Remove(ItemCoords.itemCoordList[lastRandomized]);
                             randomProgCoord = lastRandomized;
                             coordsToRemove.RemoveAt(coordsToRemove.Count - 1);
@@ -263,7 +282,15 @@ namespace GrimeRandomizer
                                     break;
                             }
 
-                            progressionListOrder++;
+                            if (l < 4)
+                            {
+                                progressionListOrder++;
+                            }
+                            else
+                            {
+                                progressionListOrder2++;
+                            }
+
                             totalNumItemsRand = totalNumItemsRand + numItemsRand;
                             assignedProg = true;
                         }

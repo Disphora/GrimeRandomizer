@@ -426,10 +426,10 @@ namespace GrimeRandomizer
             itemCoordList.Add(new ItemCoord(new Vector3(2281.20f, 222.46f, 0.00f), "Living Rock", _carvenPalace && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2281.98f, 222.46f, 0.00f), "Shard Field", _carvenPalace && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2269.40f, 262.59f, 0.00f), "Unformed Torso", pull && kilyahStone));
-            itemCoordList.Add(new ItemCoord(new Vector3(2269.60f, 270.99f, 0.00f), "Motley Pearl", pull && doubleJump && itemPull & kilyahStone));
+            itemCoordList.Add(new ItemCoord(new Vector3(2269.60f, 270.99f, 0.00f), "Motley Pearl", pull && doubleJump && itemPull && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2239.55f, 272.09f, 0.00f), "Clutching Root", pull && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2241.65f, 282.72f, 0.00f), "Fully Formed Husk", pull && itemPull && kilyahStone));
-            itemCoordList.Add(new ItemCoord(new Vector3(2245.15f, 285.47f, 0.00f), "Motley Pearl", pull && doubleJump && itemPull & kilyahStone));
+            itemCoordList.Add(new ItemCoord(new Vector3(2245.15f, 285.47f, 0.00f), "Motley Pearl", pull && doubleJump && itemPull && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2291.10f, 260.47f, 0.00f), "Shard Field", pull && airDash && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2282.18f, 252.80f, 0.00f), "Chisel Nails", pull && airDash && kilyahStone));
             itemCoordList.Add(new ItemCoord(new Vector3(2302.89f, 288.91f, 0.00f), "Unformed Torso", pull && airDash && kilyahStone));
