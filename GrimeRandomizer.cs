@@ -30,6 +30,8 @@ namespace GrimeRandomizer
     public class GrimeRandomizer : BaseUnityPlugin
     {
         internal static new ManualLogSource Log;
+        public static string AssetsFolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
+        public static AssetBundle GRAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssetsFolderPath, "randoassetbundle"));
 
         private void Awake()
         {
@@ -80,6 +82,8 @@ namespace GrimeRandomizer
 
         public class Patches
         {
+            public static GameObject InteractiveMessagePrefab = GrimeRandomizer.GRAssetBundle.LoadAsset<GameObject>("InteractiveMessagePrefab_GR_Ability");
+
             public static List<int> pool1 = new List<int>();
             public static List<int> progressionPool = new List<int>();
             public static List<int> progressionPool2 = new List<int>();
@@ -564,6 +568,7 @@ namespace GrimeRandomizer
                                     customTalentSet = false;
                                     amount = 0;
                                     item = null;
+                                    DisplayMessage("Ardor Aquired.");
                                     break;
                                 case "pull":
                                     customTalentSet = true;
@@ -573,6 +578,7 @@ namespace GrimeRandomizer
                                     item = null;
 
                                     isPullAquired = true;
+                                    DisplayMessage("Pull Aquired.");
                                     break;
                                 case "itemPull":
                                     customTalentSet = true;
@@ -580,6 +586,7 @@ namespace GrimeRandomizer
                                     customTalentSet = false;
                                     amount = 0;
                                     item = null;
+                                    DisplayMessage("Item Pull Aquired.");
                                     break;
                                 case "airDash":
                                     customTalentSet = true;
@@ -587,6 +594,7 @@ namespace GrimeRandomizer
                                     customTalentSet = false;
                                     amount = 0;
                                     item = null;
+                                    DisplayMessage("Air Dash Aquired.");
                                     break;
                                 case "selfPull":
                                     customTalentSet = true;
@@ -594,6 +602,7 @@ namespace GrimeRandomizer
                                     customTalentSet = false;
                                     amount = 0;
                                     item = null;
+                                    DisplayMessage("Self Pull Aquired.");
                                     break;
                                 case "doubleJump":
                                     customTalentSet = true;
@@ -601,6 +610,7 @@ namespace GrimeRandomizer
                                     customTalentSet = false;
                                     amount = 0;
                                     item = null;
+                                    DisplayMessage("Double Jump Aquired.");
                                     break;
                                 case "hover":
                                     customTalentSet = true;
@@ -608,6 +618,7 @@ namespace GrimeRandomizer
                                     customTalentSet = false;
                                     amount = 0;
                                     item = null;
+                                    DisplayMessage("Hover Aquired.");
                                     break;
                                 case "sprint":
                                     customTalentSet = true;
@@ -615,6 +626,7 @@ namespace GrimeRandomizer
                                     customTalentSet = false;
                                     amount = 0;
                                     item = null;
+                                    DisplayMessage("Sprint Aquired.");
                                     break;
                                 default:
                                     if (assignedItemsQuantity == 1)
@@ -673,42 +685,50 @@ namespace GrimeRandomizer
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(Hashtable_Talents.getHashtable.getTable[7].talentReference, Hashtable_Talents.getHashtable.getTable[7].talentReference.getRanksData.Length - 1);
                                 customTalentSet = false;
+                                DisplayMessage("Ardor Aquired.");
                                 break;
                             case "pull":
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[1], unlockSkillsBase(GameHandler.instance)[1].getRanksData.Length - 1);
                                 isPullAquired = true;
                                 customTalentSet = false;
+                                DisplayMessage("Pull Aquired.");
                                 break;
                             case "itemPull":
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[5], unlockSkillsBase(GameHandler.instance)[5].getRanksData.Length - 1);
                                 customTalentSet = false;
+                                DisplayMessage("Item Pull Aquired.");
                                 break;
                             case "airDash":
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[2], unlockSkillsBase(GameHandler.instance)[2].getRanksData.Length - 1);
                                 customTalentSet = false;
+                                DisplayMessage("Air Dash Aquired.");
                                 break;
                             case "selfPull":
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[3], unlockSkillsBase(GameHandler.instance)[3].getRanksData.Length - 1);
                                 customTalentSet = false;
+                                DisplayMessage("Self Pull Aquired.");
                                 break;
                             case "doubleJump":
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsBase(GameHandler.instance)[4], unlockSkillsBase(GameHandler.instance)[4].getRanksData.Length - 1);
                                 customTalentSet = false;
+                                DisplayMessage("Double Jump Aquired.");
                                 break;
                             case "hover":
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[1], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                                 customTalentSet = false;
+                                DisplayMessage("Hover Aquired.");
                                 break;
                             case "sprint":
                                 customTalentSet = true;
                                 PlayerData_Talents.instance.SetTalentRank(unlockSkillsDLC(GameHandler.instance)[0], unlockSkillsDLC(GameHandler.instance)[0].getRanksData.Length - 1);
                                 customTalentSet = false;
+                                DisplayMessage("Sprint Aquired.");
                                 break;
                             default:
                                 Log.LogInfo("Giving randomized item " + Hashtable_Items.getHashtable.GetItemByID(keyValuePair.Value.Guid));
@@ -766,9 +786,16 @@ namespace GrimeRandomizer
                 randoSettingsButton.transform.SetParent(buttonCarriers(__instance)[0].transform);
                 randoSettingsButton.transform.position = new Vector3(960f, 385f, 0.00f);
                 randoSettingsButton.transform.localScale += new Vector3(0.5f, 0.5f, 0.5f);
+
+                if (!File.Exists(Path.Combine(Application.persistentDataPath, "RandomizedState", "RandomStateSave.json")))
+                {
+                    randoSettingsButton.SetActive(false);
+                }
+
                 UnityEngine.UI.Button rsButton = randoSettingsButton.GetComponentInChildren<UnityEngine.UI.Button>();
                 rsButton.onClick.SetPersistentListenerState(0, UnityEventCallState.Off);
                 rsButton.onClick.AddListener(() => SaveRandomState.Delete("RandomizedState"));
+                rsButton.onClick.AddListener(() => randoSettingsButton.SetActive(false));
                 rsButton.name = "MainMenu_Button_RSettings";
                 panelButtons(__instance).AddItem(rsButton);
                 TextMeshProUGUI randoSettingsButtonText = randoSettingsButton.GetComponentInChildren<TextMeshProUGUI>();
@@ -828,6 +855,13 @@ namespace GrimeRandomizer
 
                     return $"{ic.Coord.x:F3},{ic.Coord.y:F3},{ic.Coord.z:F3}|{ic.ItemName}";
                 }
+            }
+
+            public static void DisplayMessage(string Message)
+            {
+                TextMeshProUGUI tmptext = InteractiveMessagePrefab.GetComponentInChildren<TextMeshProUGUI>();
+                tmptext.text = Message;
+                GUI_InteractiveMessageHandler.instance.DisplayMessage(InteractiveMessagePrefab);
             }
 
         }
