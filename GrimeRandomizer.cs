@@ -522,6 +522,9 @@ namespace GrimeRandomizer
                                             if (StrandCollected)
                                             {
                                                 customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 1);
+
+                                                customFlagSet = true;
                                                 SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
                                             }
                                             else
@@ -636,10 +639,32 @@ namespace GrimeRandomizer
                                         amount = keyValuePair.Value.Quantity;
                                         kvpToRemove = keyValuePair.Key;
 
-                                        if (keyValuePair.Value.Guid == "e497b557-1320-4df5-a844-3985e80b6d25")
+                                        if (keyValuePair.Value.Guid == "36df0fa1-a266-4973-85b8-702ac10c2f6f") //KiliahStone
                                         {
-                                            customFlagSet = true;
-                                            SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
+                                            kilyahStoneCollected = true;
+                                            if (StrandCollected)
+                                            {
+                                                customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 1);
+
+                                                customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
+                                            }
+                                            else
+                                            {
+                                                customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 1);
+                                            }
+                                        }
+
+                                        if (keyValuePair.Value.Guid == "e497b557-1320-4df5-a844-3985e80b6d25") //StrandOfTheChild
+                                        {
+                                            StrandCollected = true;
+                                            if (kilyahStoneCollected)
+                                            {
+                                                customFlagSet = true;
+                                                SyncHandler.SetGlobalFlagValue("GSF_Shidra", 2);
+                                            }
                                         }
                                     }
                                     persistentAssignNum = assignedItemsQuantity;
