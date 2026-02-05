@@ -39,49 +39,25 @@ namespace GrimeRandomizer
 
             Harmony harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
-            MethodInfo original2 = AccessTools.Method(typeof(GameHandler), "Start");
-            MethodInfo patch2 = AccessTools.Method(typeof(Patches), "RandoPatch");
-            harmony.Patch(original2, new HarmonyMethod(patch2));
-
-            MethodInfo original5 = AccessTools.Method(typeof(PlayerData_Inventory), "GiveItem");
-            MethodInfo patch5 = AccessTools.Method(typeof(Patches), "GiveRandom");
-            harmony.Patch(original5, new HarmonyMethod(patch5));
-
-            MethodInfo original = AccessTools.Method(typeof(PickableItemHandler), "UpdateFrame");
-            MethodInfo patch = AccessTools.Method(typeof(Patches), "GetCoord");
-            harmony.Patch(original, new HarmonyMethod(patch));
-
-            MethodInfo original3 = AccessTools.Method(typeof(PickableItemHandler), "OnAbsorb");
-            MethodInfo patch3 = AccessTools.Method(typeof(Patches), "GetCoord2");
-            harmony.Patch(original3, new HarmonyMethod(patch3));
-
-            MethodInfo testor = AccessTools.Method(typeof(SyncHandler), "_SetGlobalFlagValue");
-            MethodInfo testpa = AccessTools.Method(typeof(Patches), "flagSet");
-            harmony.Patch(testor, new HarmonyMethod(testpa));
-
-            MethodInfo bloodmetal = AccessTools.Method(typeof(InteractableMine), "PickUp");
-            MethodInfo bmpatch = AccessTools.Method(typeof(Patches), "GetBloodmetalCoord");
-            harmony.Patch(bloodmetal, new HarmonyMethod(bmpatch));
-
-            MethodInfo original4 = AccessTools.Method(typeof(MainMenuHandler), "Start");
-            MethodInfo patch4 = AccessTools.Method(typeof(Patches), "SetRandoText");
-            harmony.Patch(original4, new HarmonyMethod(patch4));
-
-            MethodInfo original6 = AccessTools.Method(typeof(PlayerData_Talents), "SetTalentRank");
-            MethodInfo patch6 = AccessTools.Method(typeof(Patches), "GiveRandomFromRank");
-            harmony.Patch(original6, new HarmonyMethod(patch6));
-
-            MethodInfo original7 = AccessTools.Method(typeof(PlayerData_Talents), "IsTalentAquired");
-            MethodInfo patch7 = AccessTools.Method(typeof(Patches), "TalentAquiredHijack");
-            harmony.Patch(original7, new HarmonyMethod(patch7));
-
-            MethodInfo og8 = AccessTools.Method(typeof(GUI_Menu_TradeWindow), "ConfirmPurchase");
-            MethodInfo pc8 = AccessTools.Method(typeof(Patches), "ShopPatch");
-            harmony.Patch(og8, new HarmonyMethod(pc8));
+            PatchMethod(typeof(GameHandler), "Start", "RandoPatch", harmony);
+            PatchMethod(typeof(PlayerData_Inventory), "GiveItem", "GiveRandom", harmony);
+            PatchMethod(typeof(PickableItemHandler), "UpdateFrame", "GetCoord", harmony);
+            PatchMethod(typeof(PickableItemHandler), "OnAbsorb", "GetCoord2", harmony);
+            PatchMethod(typeof(SyncHandler), "_SetGlobalFlagValue", "flagSet", harmony);
+            PatchMethod(typeof(InteractableMine), "PickUp", "GetBloodmetalCoord", harmony);
+            PatchMethod(typeof(MainMenuHandler), "Start", "SetRandoText", harmony);
+            PatchMethod(typeof(PlayerData_Talents), "SetTalentRank", "GiveRandomFromRank", harmony);
+            PatchMethod(typeof(PlayerData_Talents), "IsTalentAquired", "TalentAquiredHijack", harmony);
+            PatchMethod(typeof(GUI_Menu_TradeWindow), "ConfirmPurchase", "ShopPatch", harmony);
 
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} has loaded!");
+        }
 
-
+        public static void PatchMethod(Type type, string original, string patch, Harmony harmony)
+        {
+            MethodInfo originalMethod = AccessTools.Method(type, original);
+            MethodInfo patchMethod = AccessTools.Method(typeof(Patches), patch);
+            harmony.Patch(originalMethod, new HarmonyMethod(patchMethod));
         }
 
         public class Patches
