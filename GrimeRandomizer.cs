@@ -75,6 +75,10 @@ namespace GrimeRandomizer
             MethodInfo patch7 = AccessTools.Method(typeof(Patches), "TalentAquiredHijack");
             harmony.Patch(original7, new HarmonyMethod(patch7));
 
+            MethodInfo og8 = AccessTools.Method(typeof(GUI_Menu_TradeWindow), "ConfirmPurchase");
+            MethodInfo pc8 = AccessTools.Method(typeof(Patches), "ShopPatch");
+            harmony.Patch(og8, new HarmonyMethod(pc8));
+
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} has loaded!");
 
 
@@ -110,6 +114,7 @@ namespace GrimeRandomizer
             public static int numItemsRand = 0;
             public static int totalNumItemsRand = 0;
             public static int lastRandomized = 0;
+            public static bool isShopItem = false;
 
             public static bool isPullAquired = false;
             public static bool isSelfPullAquired = false;
@@ -550,8 +555,15 @@ namespace GrimeRandomizer
                     }
                     else
                     {
-                        item = null;
-                        amount = 0;
+                        if (!isShopItem)
+                        {
+                            item = null;
+                            amount = 0;
+                        }
+                        else
+                        {
+                            isShopItem = false;
+                        }
                     }
                 }
                 else
@@ -839,7 +851,7 @@ namespace GrimeRandomizer
                 public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
                     => destinationType == typeof(string) || base.CanConvertTo(context, destinationType);
 
-                //string to ItemCoord (DESERIALIZATION)
+                //string to ItemCoord
                 public override object ConvertFrom(
                     ITypeDescriptorContext context,
                     CultureInfo culture,
@@ -865,7 +877,7 @@ namespace GrimeRandomizer
                     return new ItemCoord(coord, parts[1]);
                 }
 
-                //ItemCoord to string (SERIALIZATION)
+                //ItemCoord to string
                 public override object ConvertTo(
                     ITypeDescriptorContext context,
                     CultureInfo culture,
@@ -887,6 +899,12 @@ namespace GrimeRandomizer
                 TextMeshProUGUI tmptext = InteractiveMessagePrefab.GetComponentInChildren<TextMeshProUGUI>();
                 tmptext.text = Message;
                 GUI_InteractiveMessageHandler.instance.DisplayMessage(InteractiveMessagePrefab);
+            }
+
+            public static bool ShopPatch()
+            {
+                isShopItem = true;
+                return true;
             }
 
         }

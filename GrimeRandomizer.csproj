@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <AssemblyName>GrimeRandomizer</AssemblyName>
-    <Version>0.1.0</Version>
+    <Version>1.0.2</Version>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <RestoreAdditionalProjectSources>
