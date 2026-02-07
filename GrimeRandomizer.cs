@@ -30,8 +30,7 @@ namespace GrimeRandomizer
     public class GrimeRandomizer : BaseUnityPlugin
     {
         internal static new ManualLogSource Log;
-        public static string AssetsFolderPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Assets");
-        public static AssetBundle GRAssetBundle = AssetBundle.LoadFromFile(Path.Combine(AssetsFolderPath, "randoassetbundle"));
+        public static AssetBundle GRAssetBundle;
 
         private void Awake()
         {
@@ -51,6 +50,8 @@ namespace GrimeRandomizer
             PatchMethod(typeof(GUI_Menu_TradeWindow), "ConfirmPurchase", "ShopPatch", harmony);
 
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} has loaded!");
+
+            LoadAssetBundle();
         }
 
         public static void PatchMethod(Type type, string original, string patch, Harmony harmony)
@@ -58,6 +59,17 @@ namespace GrimeRandomizer
             MethodInfo originalMethod = AccessTools.Method(type, original);
             MethodInfo patchMethod = AccessTools.Method(typeof(Patches), patch);
             harmony.Patch(originalMethod, new HarmonyMethod(patchMethod));
+        }
+
+        public static void LoadAssetBundle()
+        {
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            using (Stream bundleStream = assembly.GetManifestResourceStream("GrimeRandomizer.randoassetbundle"))
+            {
+                byte[] bundleBytes = new byte[bundleStream.Length];
+                bundleStream.Read(bundleBytes, 0, bundleBytes.Length);
+                GRAssetBundle = AssetBundle.LoadFromMemory(bundleBytes);
+            }
         }
 
         public class Patches
